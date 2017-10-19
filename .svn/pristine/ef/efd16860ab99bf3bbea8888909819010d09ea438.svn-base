@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="left">
+
+        <LinearLayout
+            android:id="@+id/findBackBtnView"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"></LinearLayout>
+        <Button
+            android:id="@+id/findBackBtn"
+            android:layout_width="7.5dp"
+            android:layout_height="14dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="27dp"
+            android:background="@mipmap/backblack" />
+
+        <TextView
+            android:id="@+id/title_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="已加入（创建）小组"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="16dp" />
+    </RelativeLayout>
+    <com.pointhouse.chiguan.common.updatecommon.PullToRefreshListView
+        android:id="@+id/viewgroupList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null">
+    </com.pointhouse.chiguan.common.updatecommon.PullToRefreshListView>
+</LinearLayout>

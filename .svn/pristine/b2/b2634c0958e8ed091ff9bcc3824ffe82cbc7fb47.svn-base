@@ -1,0 +1,121 @@
+package com.pointhouse.chiguan.h1;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+
+import com.netease.nim.demo.DemoCache;
+import com.netease.nim.demo.config.preference.Preferences;
+import com.netease.nim.demo.config.preference.UserPreferences;
+import com.netease.nim.uikit.NimUIKit;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.StatusBarNotificationConfig;
+import com.netease.nimlib.sdk.StatusCode;
+import com.netease.nimlib.sdk.auth.AuthService;
+import com.netease.nimlib.sdk.auth.LoginInfo;
+import com.pointhouse.chiguan.R;
+import com.pointhouse.chiguan.common.updatecommon.PullToRefreshBase;
+import com.pointhouse.chiguan.common.updatecommon.PullToRefreshListView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class GroupMainActivity extends Fragment {
+    private final static String TAG="GroupMainActivity";
+    private View groupView=null;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(groupView!=null){
+            return groupView;
+        }
+        groupView=inflater.inflate(R.layout.h1_activity_groupmain, container, false);
+        StatusCode status = NIMClient.getStatus();
+        if(!status.equals(StatusCode.LOGINED)){
+            String account="test2";
+            String token="123456";
+            NimUIKit.doLogin(new LoginInfo(account, token), new RequestCallback<LoginInfo>() {
+                @Override
+                public void onSuccess(LoginInfo loginInfo) {
+                    DemoCache.setAccount(account);
+                    saveLoginInfo(account, token);
+                    // 初始化消息提醒配置
+                    initNotificationConfig();
+                }
+
+                @Override
+                public void onFailed(int i) {
+
+                }
+
+                @Override
+                public void onException(Throwable throwable) {
+
+                }
+            });
+        }
+
+        List<GroupItem> list=new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            GroupItem item=new GroupItem("114881924","groupName"+i);
+            if(i==3){
+                item.setGroupMember(200);
+                item.setGroupStatus(2);
+            }
+            if(i==4){
+                item.setGroupStatus(1);
+            }
+            list.add(item);
+        }
+
+        PullToRefreshListView ptrListView= (PullToRefreshListView) groupView.findViewById(R.id.groupList);
+        ptrListView.setPullLoadEnabled(false);
+        ptrListView.setScrollLoadEnabled(true);
+        ptrListView.setPullRefreshEnabled(false);//禁用上拉刷新
+        ListView listView = ptrListView.getRefreshableView(); //(ListView) groupView.findViewById(R.id.groupList);
+        GroupAdapter mAdapter = new GroupAdapter(groupView.getContext(),list);
+        listView.setAdapter(mAdapter);
+        ptrListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                GroupItem item=new GroupItem("114881924","groupName");
+                list.add(item);
+                ptrListView.onRefreshComplete();
+            }
+        });
+        return groupView;
+    }
+
+    private void saveLoginInfo(final String account, final String token) {
+        Preferences.saveUserAccount(account);
+        Preferences.saveUserToken(token);
+    }
+
+    private void initNotificationConfig() {
+        // 初始化消息提醒
+        NIMClient.toggleNotification(UserPreferences.getNotificationToggle());
+
+        // 加载状态栏配置
+        StatusBarNotificationConfig statusBarNotificationConfig = UserPreferences.getStatusConfig();
+        if (statusBarNotificationConfig == null) {
+            statusBarNotificationConfig = DemoCache.getNotificationConfig();
+            UserPreferences.setStatusConfig(statusBarNotificationConfig);
+        }
+        // 更新配置
+        NIMClient.updateStatusBarNotificationConfig(statusBarNotificationConfig);
+    }
+}

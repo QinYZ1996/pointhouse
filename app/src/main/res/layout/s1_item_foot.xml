@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f3f4f6" />
+
+    <RelativeLayout
+        android:id="@+id/viewTypeAll"
+        android:layout_width="match_parent"
+        android:layout_height="41dp">
+
+        <TextView
+            android:id="@+id/txtTypeAll"
+            style="@style/walkman_text"
+            android:layout_centerInParent="true"
+            android:drawableEnd="@mipmap/checkmore"
+            android:drawableRight="@mipmap/checkmore"
+            android:text="@string/walkman_watch_all"
+            android:textColor="#3c5fc5"
+            android:textSize="13.0dp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#f3f4f6" />
+</LinearLayout>

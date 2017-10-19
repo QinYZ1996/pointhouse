@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.pointhouse.chiguan.common.swipelistview.SwipeListLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/txtDelete"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="#ff3b30"
+            android:gravity="center"
+            android:text="@string/walkman_delete"
+            android:textColor="#fff"
+            android:textSize="22.0dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/viewCourse"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imgThumb"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="13dp"
+            android:layout_marginStart="13dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/walkman_thumb"
+            android:scaleType="fitXY"
+            android:src="@drawable/class_default" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@id/imgThumb"
+            android:layout_toRightOf="@id/imgThumb"
+            android:background="@drawable/border_top"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
+
+            <ImageView
+                android:id="@+id/imgMusic"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="15dp"
+                android:layout_marginRight="15dp"
+                android:contentDescription="@string/walkman_music"
+                android:src="@mipmap/music" />
+
+            <ImageView
+                android:id="@+id/imgVideo"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_alignWithParentIfMissing="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="13dp"
+                android:layout_marginRight="13dp"
+                android:layout_toLeftOf="@id/imgMusic"
+                android:layout_toStartOf="@id/imgMusic"
+                android:contentDescription="@string/walkman_video"
+                android:src="@mipmap/video" />
+
+            <ImageView
+                android:id="@+id/imgContent"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_alignWithParentIfMissing="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="13dp"
+                android:layout_marginRight="13dp"
+                android:layout_toLeftOf="@id/imgVideo"
+                android:layout_toStartOf="@id/imgVideo"
+                android:contentDescription="@string/walkman_content"
+                android:src="@mipmap/learn" />
+
+            <TextView
+                android:id="@+id/txtName"
+                style="@style/walkman_text"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_toLeftOf="@id/imgContent"
+                android:layout_toStartOf="@id/imgContent"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/walkman_lesson_name"
+                android:textSize="17.0dp" />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</com.pointhouse.chiguan.common.swipelistview.SwipeListLayout>

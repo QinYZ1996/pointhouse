@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="51dp"
+    android:background="#F5F5F5"
+    android:orientation="horizontal">
+
+    <com.pointhouse.chiguan.common.RoundProgressBar.RoundProgressBar
+        android:id="@+id/imgStatus"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/media_forward_margin_left_right"
+        android:layout_marginLeft="@dimen/media_forward_margin_left_right"
+        android:layout_marginRight="@dimen/media_forward_margin_left_right"
+        android:layout_marginStart="@dimen/media_forward_margin_left_right"
+        android:background="@drawable/media_play"
+        android:contentDescription="@string/media_play" />
+
+    <ImageView
+        android:id="@+id/imgClose"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:scaleType="center"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/media_close"
+        android:src="@mipmap/guanbi"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/txtTitle"
+        style="@style/mini_media"
+        android:layout_centerVertical="false"
+        android:layout_marginTop="4dp"
+        android:layout_toEndOf="@id/imgStatus"
+        android:layout_toRightOf="@id/imgStatus"
+        android:layout_toLeftOf="@id/imgClose"
+        android:layout_toStartOf="@id/imgClose"
+        android:text="@string/media_reading"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="#727272"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/txtTimeMax"
+        style="@style/mini_media"
+        android:layout_below="@id/txtTitle"
+        android:layout_toEndOf="@id/imgStatus"
+        android:layout_toRightOf="@id/imgStatus"
+        android:text="@string/media_zero"
+        android:textColor="#939297"
+        android:textSize="11dp" />
+
+    <TextView
+        android:id="@+id/txt1"
+        style="@style/mini_media"
+        android:layout_below="@id/txtTitle"
+        android:layout_toEndOf="@id/txtTimeMax"
+        android:layout_toRightOf="@id/txtTimeMax"
+        android:text="@string/media_split2"
+        android:textColor="#939297"
+        android:textSize="11dp" />
+
+    <TextView
+        android:id="@+id/txtSubTitle"
+        style="@style/mini_media"
+        android:layout_below="@id/txtTitle"
+        android:layout_toEndOf="@id/txt1"
+        android:layout_toRightOf="@id/txt1"
+        android:text="@string/media_reading"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="#939297"
+        android:textSize="11dp" />
+
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+</RelativeLayout>

@@ -1,0 +1,112 @@
+package com.pointhouse.chiguan.h1;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import com.pointhouse.chiguan.R;
+import com.pointhouse.chiguan.Application.GlobalApplication;
+
+/**
+ * 群组实体
+ * Created by Maclaine on 2017/7/5.
+ */
+
+class GroupItem {
+    private String groupID;
+    private String groupName;
+    private Bitmap groupImg;
+    private int groupStatus=0;
+    private int groupMember=1;
+    private int groupMemberMax=200;
+
+    GroupItem() {}
+
+    GroupItem(String groupID, String groupName) {
+        this.groupID=groupID;
+        this.groupName = groupName;
+    }
+
+    GroupItem(String groupID,String groupName, Bitmap groupImg, int groupStatus, int groupMember) {
+        this.groupID=groupID;
+        this.groupName = groupName;
+        this.groupImg = groupImg;
+        this.groupStatus = groupStatus;
+        this.groupMember = groupMember;
+    }
+
+    GroupItem(String groupID,String groupName, Bitmap groupImg, int groupStatus, int groupMember, int groupMemberMax) {
+        this.groupID=groupID;
+        this.groupName = groupName;
+        this.groupImg = groupImg;
+        this.groupStatus = groupStatus;
+        this.groupMember = groupMember;
+        this.groupMemberMax = groupMemberMax;
+    }
+
+    /**
+     * @return 群组ID
+     */
+    String getGroupID() {
+        return groupID;
+    }
+
+    void setGroupID(String groupID) {
+        this.groupID = groupID;
+    }
+
+    /**
+     * @return 群组名
+     */
+    String getGroupName() {
+        return groupName;
+    }
+
+    void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    /**
+     *
+     * @return 群组图像,默认图片headportrait1
+     */
+    Bitmap getGroupImg() {
+        return groupImg;
+    }
+
+    void setGroupImg(Bitmap groupImg) {
+        this.groupImg = groupImg;
+    }
+
+    /**
+     * @return 群组状态,默认0
+     */
+    int getGroupStatus() {
+        return groupStatus;
+    }
+
+    void setGroupStatus(int groupStatus) {
+        this.groupStatus = groupStatus;
+    }
+
+    /**
+     * @return 群组人数,默认1
+     */
+    int getGroupMember() {
+        return groupMember;
+    }
+
+    void setGroupMember(int groupMember) {
+        this.groupMember = groupMember;
+    }
+
+    /**
+     * @return 群组最大人数,默认200
+     */
+    int getGroupMemberMax() {
+        return groupMemberMax;
+    }
+
+    void setGroupMemberMax(int groupMemberMax) {
+        this.groupMemberMax = groupMemberMax;
+    }
+}

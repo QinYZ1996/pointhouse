@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/commonMedia"
+    android:layout_width="match_parent"
+    android:layout_height="267dp"
+    android:visibility="invisible"
+    >
+
+    <FrameLayout
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
+        android:layout_height="210dp">
+        <LinearLayout
+            android:id="@+id/viewSVContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@color/black"
+            >
+            <!--视频播放-->
+<!--            <SurfaceView
+                android:id="@+id/mysurface"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />-->
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/fenxiang"
+            android:alpha="0"/>
+
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/imgMusic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/yinpinbeijing"
+            android:visibility="invisible" />
+
+
+        <!--视频操作界面-->
+        <RelativeLayout
+            android:id="@+id/viewOperate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible">
+
+            <!--课程列表-->
+            <ImageView
+                android:id="@+id/imgMenu"
+                android:layout_width="38.5dp"
+                android:layout_height="33dp"
+                android:padding="10dp"
+                android:cropToPadding="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignWithParentIfMissing="true"
+                android:layout_marginEnd="@dimen/media_icon_spacing"
+                android:layout_marginRight="@dimen/media_icon_spacing"
+                android:layout_marginTop="2dp"
+                android:contentDescription="@string/media_menu"
+                android:src="@mipmap/liebiao"
+                android:visibility="gone" />
+
+            <!--切换到视频-->
+            <ImageView
+                android:id="@+id/imgToVideo"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="5dp"
+                android:cropToPadding="true"
+                android:layout_marginEnd="@dimen/media_icon_spacing"
+                android:layout_marginRight="@dimen/media_icon_spacing"
+                android:layout_alignWithParentIfMissing="true"
+                android:layout_toLeftOf="@+id/imgMenu"
+                android:layout_toStartOf="@+id/imgMenu"
+                android:contentDescription="@string/media_to_video"
+                android:src="@mipmap/zhuanshipin"
+                android:visibility="gone" />
+
+            <!--切换到音频-->
+            <ImageView
+                android:id="@+id/imgToMusic"
+                android:layout_width="35dp"
+                android:layout_height="31.5dp"
+                android:padding="5dp"
+                android:cropToPadding="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignWithParentIfMissing="true"
+                android:layout_marginEnd="@dimen/media_icon_spacing"
+                android:layout_marginRight="@dimen/media_icon_spacing"
+                android:layout_marginTop="2dp"
+                android:contentDescription="@string/meida_to_music"
+                android:src="@mipmap/zhuanhuanyinpin"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/txtSpeedFull"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/media_forward_margin_left_right"
+                android:layout_marginRight="@dimen/media_forward_margin_left_right"
+                android:layout_alignWithParentIfMissing="true"
+                android:layout_marginTop="5dp"
+                android:layout_toLeftOf="@id/imgToVideo"
+                android:layout_toStartOf="@id/imgToVideo"
+                android:text="@string/media_speed_1"
+                android:textColor="#fff"
+                android:textSize="16.0dp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <!--文章分享专用按钮-->
+            <ImageView
+                android:id="@+id/imgShare"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:padding="5dp"
+                android:layout_marginEnd="@dimen/media_icon_spacing"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="12dp"
+                android:src="@mipmap/fenxiang"
+                android:visibility="gone"/>
+
+            <!--文章分享专用按钮-->
+            <ImageView
+                android:id="@+id/imgShareFull"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="5dp"
+                android:layout_toLeftOf="@id/txtSpeedFull"
+                android:layout_marginEnd="@dimen/media_icon_spacing"
+                android:layout_marginRight="@dimen/media_icon_spacing"
+                android:layout_marginTop="2dp"
+                android:src="@mipmap/fenxiang"
+                android:visibility="gone"/>
+
+            <!--后退-->
+            <ImageView
+                android:id="@+id/imgBack"
+                android:scaleType="center"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/media_back_margin"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/media_back"
+                android:src="@mipmap/backwhite"
+                android:visibility="invisible"
+                />
+
+            <TextView
+                android:id="@+id/txtBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@id/imgBack"
+                android:layout_toRightOf="@id/imgBack"
+                android:text="@string/media_reading"
+                android:textColor="#fff"
+                android:textSize="16.0dp"
+                android:textStyle="bold"
+                android:visibility="invisible" />
+
+            <!--快进-->
+            <RelativeLayout
+                android:id="@+id/viewFastForward"
+                android:layout_width="58.5dp"
+                android:layout_height="58.5dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="@dimen/media_forward_margin_left_right"
+                android:layout_marginRight="@dimen/media_forward_margin_left_right"
+                android:layout_centerVertical="true"
+                android:background="@mipmap/heiyuan">
+
+                <ImageView
+                    android:id="@+id/imgFastForward"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_width="19dp"
+                    android:layout_height="14dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/media_fast_forward"
+                    android:focusable="false"
+                    android:src="@mipmap/kuaijin" />
+
+                <TextView
+                    style="@style/media_text"
+                    android:layout_toLeftOf="@id/imgFastForward"
+                    android:layout_toStartOf="@id/imgFastForward"
+                    android:focusable="false"
+                    android:text="@string/media_10s"
+                    android:textColor="#fff" />
+            </RelativeLayout>
+
+            <!--快退-->
+            <RelativeLayout
+                android:id="@+id/viewFastBack"
+                android:layout_width="58.5dp"
+                android:layout_height="58.5dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="@dimen/media_forward_margin_left_right"
+                android:layout_marginStart="@dimen/media_forward_margin_left_right"
+                android:layout_centerVertical="true"
+                android:background="@mipmap/heiyuan">
+
+                <ImageView
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
+                    android:id="@+id/imgFastBack"
+                    android:layout_width="19dp"
+                    android:layout_height="14dp"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/media_fast_back"
+                    android:focusable="false"
+                    android:src="@mipmap/kuaitui" />
+
+                <TextView
+                    style="@style/media_text"
+                    android:layout_toEndOf="@id/imgFastBack"
+                    android:layout_toRightOf="@id/imgFastBack"
+                    android:focusable="false"
+                    android:text="@string/media_10s"
+                    android:textColor="#fff" />
+            </RelativeLayout>
+
+            <!--全屏开始暂停-->
+            <RelativeLayout
+                android:id="@+id/viewStatusFull"
+                android:layout_width="58.5dp"
+                android:layout_height="58.5dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@mipmap/heiyuan"
+                android:gravity="center"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:id="@+id/imgStatusFull"
+                    android:layout_width="17.5dp"
+                    android:layout_height="21dp"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/media_fast_back"
+                    android:focusable="false"
+                    android:src="@mipmap/bofang" />
+
+            </RelativeLayout>
+
+
+            <!--倍速-->
+            <RelativeLayout
+                android:id="@+id/viewSpeed"
+                android:layout_width="58.5dp"
+                android:layout_height="58.5dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@mipmap/baiyuan"
+                android:visibility="invisible">
+
+                <TextView
+                    android:id="@+id/txtSpeed"
+                    style="@style/media_text"
+                    android:layout_centerInParent="true"
+                    android:focusable="false"
+                    android:text="@string/media_speed_1"
+                    android:textColor="#fff" />
+            </RelativeLayout>
+
+            <!--进度条-->
+            <RelativeLayout
+                android:id="@+id/viewProgress"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_alignParentBottom="true"
+                android:background="#000">
+
+                <TextView
+                    android:id="@+id/txtTimeCurrent"
+                    style="@style/media_text"
+                    android:layout_marginLeft="@dimen/media_forward_margin_left_right"
+                    android:layout_marginStart="@dimen/media_forward_margin_left_right"
+                    android:text="@string/media_zero"
+                    android:textColor="#fff" />
+
+                <ImageView
+                    android:id="@+id/imgFull"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/media_forward_margin_left_right"
+                    android:layout_marginRight="@dimen/media_forward_margin_left_right"
+                    android:contentDescription="@string/media_full_screen"
+                    android:src="@mipmap/quanping" />
+
+                <TextView
+                    android:id="@+id/txtTimeMax"
+                    style="@style/media_text"
+                    android:layout_marginEnd="@dimen/media_forward_margin_left_right"
+                    android:layout_marginRight="@dimen/media_forward_margin_left_right"
+                    android:layout_toLeftOf="@+id/imgFull"
+                    android:layout_toStartOf="@+id/imgFull"
+                    android:textColor="#fff" />
+
+                <SeekBar
+                    android:id="@+id/seekBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/txtTimeCurrent"
+                    android:layout_toLeftOf="@+id/txtTimeMax"
+                    android:layout_toRightOf="@id/txtTimeCurrent"
+                    android:layout_toStartOf="@+id/txtTimeMax"
+                    android:layout_centerVertical="true"
+                    android:thumb="@mipmap/bofangyuanxing"
+                    android:focusable="false" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <!--载入提示-->
+        <RelativeLayout
+            android:id="@+id/viewLoading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/viewLoadingText"
+                style="@style/media_text"
+                android:text="@string/media_loading"
+                android:layout_centerInParent="true"
+                android:textColor="@color/white"
+                />
+        </RelativeLayout>
+
+    </FrameLayout>
+    <!--播放/循环-->
+    <RelativeLayout
+        android:id="@+id/viewStatus"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:layout_below="@id/frame">
+
+        <ImageView
+            android:id="@+id/imgStatus"
+            android:layout_width="27.5dp"
+            android:layout_height="27.5dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="11dp"
+            android:layout_marginStart="11dp"
+            android:contentDescription="@string/media_play"
+            android:src="@mipmap/zanting2" />
+
+        <TextView
+            android:id="@+id/txtTimeCurrent2"
+            style="@style/media_text"
+            android:layout_marginLeft="11dp"
+            android:layout_marginStart="11dp"
+            android:layout_toEndOf="@+id/imgStatus"
+            android:layout_toRightOf="@+id/imgStatus" />
+
+        <TextView
+            android:id="@+id/txtTmp"
+            style="@style/media_text"
+            android:layout_toEndOf="@+id/txtTimeCurrent2"
+            android:layout_toRightOf="@+id/txtTimeCurrent2"
+            android:text="@string/media_split" />
+
+        <TextView
+            android:id="@+id/txtTimeMax2"
+            style="@style/media_text"
+            android:layout_toEndOf="@+id/txtTmp"
+            android:layout_toRightOf="@+id/txtTmp" />
+
+        <ImageView
+            android:id="@+id/imgRepeat"
+            android:layout_width="31.5dp"
+            android:layout_height="21.5dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="17dp"
+            android:layout_marginRight="17dp"
+            android:contentDescription="@string/media_repeat"
+            android:src="@mipmap/bofangliebiaoxunhuan" />
+
+        <com.pointhouse.chiguan.common.RoundProgressBar.RoundProgressBar
+            android:id="@+id/imgDownload"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="17dp"
+            android:layout_marginRight="17dp"
+            android:layout_toLeftOf="@id/imgRepeat"
+            android:layout_toStartOf="@id/imgRepeat"
+            android:contentDescription="@string/media_download"
+            android:visibility="gone"
+            android:src="@mipmap/xiazai" />
+        <TextView
+            android:id="@+id/txtDownload"
+            style="@style/media_text"
+            android:text="@string/walkman_download_waiting"
+            android:visibility="gone"
+            android:layout_toLeftOf="@id/imgRepeat"
+            android:layout_toStartOf="@id/imgRepeat"
+            />
+    </RelativeLayout>
+</RelativeLayout>

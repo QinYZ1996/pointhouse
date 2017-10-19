@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <ScrollView android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+        <LinearLayout android:orientation="vertical" android:layout_width="match_parent"
+            android:layout_height="match_parent" android:background="@color/white"
+            >
+            <RelativeLayout
+                android:id="@+id/RelativeLayout01"
+                android:layout_width="match_parent"
+                android:layout_height="56dp">
+                <LinearLayout
+                    android:id="@+id/findBackBtnView"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"></LinearLayout>
+                <Button
+                    android:id="@+id/findBackBtn"
+                    android:layout_width="7.5dp"
+                    android:layout_height="18dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="27dp"
+                    android:background="@mipmap/backblack" />
+            </RelativeLayout>
+            <ImageView
+                android:id="@+id/view1"
+                android:layout_below="@id/RelativeLayout02"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#f3f4f6">
+            </ImageView>
+            <RelativeLayout
+                android:id="@+id/RelativeLayout02"
+                android:layout_width="match_parent"
+                android:layout_height="131dp">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/teacher_icon"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="24dp"
+                    android:src="@drawable/icon2_default">
+                </de.hdodenhof.circleimageview.CircleImageView>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_below="@id/teacher_icon"
+                    android:layout_height="47dp"
+                    android:layout_centerHorizontal="true">
+                    <ImageView
+                        android:id="@+id/Gender_img"
+                        android:layout_width="8.5dp"
+                        android:layout_height="8.5dp"
+                        android:layout_centerVertical="true"
+                        android:background="@mipmap/sexman">
+                    </ImageView>
+                    <TextView
+                        android:id="@+id/Gender_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_marginLeft="2.5dp"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/Gender_img"
+                        android:textColor="#111111"
+                        android:textSize="17dp" />
+                    <ImageView
+                        android:id="@+id/Country_img"
+                        android:layout_marginLeft="20dp"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/Gender_txt"
+                        android:background="@mipmap/coordination">
+                    </ImageView>
+                    <TextView
+                        android:id="@+id/Country_txt"
+                        android:layout_toRightOf="@id/Country_img"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:layout_centerVertical="true"
+                        android:textColor="#626362"
+                        android:textSize="12dp"
+                        />
+                </RelativeLayout>
+            </RelativeLayout>
+            <ImageView
+                android:id="@+id/view2"
+                android:layout_width="match_parent"
+                android:layout_height="9dp"
+                android:background="#f3f4f6">
+            </ImageView>
+            <LinearLayout
+                android:id="@+id/coursell"
+                android:layout_below="@id/view2"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/PersonalData"
+                        android:layout_width="match_parent"
+                        android:layout_height="29.5dp"
+                        android:layout_marginLeft="75dp"
+                        android:gravity="center"
+                        android:text="个人资料"
+                        android:textColor="@drawable/tab_head_text"
+                        android:textSize="18dp" />
+
+                    <View
+                        android:id="@+id/PersonalDataLine"
+                        android:layout_width="match_parent"
+                        android:layout_height="2.5dp"
+                        android:layout_below="@id/PersonalData"
+                        android:layout_marginLeft="75dp"
+                        android:background="@drawable/tab_menu_line" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="75dp"
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/AllCourses"
+                        android:layout_width="match_parent"
+                        android:layout_height="29.5dp"
+                        android:text="所有课程"
+                        android:textColor="@drawable/tab_head_text"
+                        android:gravity="center"
+                        android:textSize="18dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true" />
+                    <View
+                        android:id="@+id/AllCoursesLine"
+                        android:layout_below="@id/AllCourses"
+                        android:layout_width="match_parent"
+                        android:layout_height="2.5dp"
+                        android:background="@drawable/tab_menu_line" />
+                </RelativeLayout>
+            </LinearLayout>
+            <ImageView android:id="@+id/view3"
+                android:layout_below="@id/coursell"
+                android:layout_width="match_parent"
+                android:layout_height="2.5dp"
+                android:background="#f3f4f6"></ImageView>
+            <RelativeLayout
+                android:id="@+id/RelativeLayout06"
+                android:layout_below="@id/view3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <WebView
+                    android:id="@+id/personalDataText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="#000000"
+                    android:textSize="18.5dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/RelativeLayout07"
+                android:layout_below="@id/view3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+                <ListView
+                    android:id="@+id/viewCourseList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@null">
+                </ListView>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

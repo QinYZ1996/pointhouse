@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:background="@drawable/border_bottom">
+        <LinearLayout
+            android:id="@+id/findBackBtnView"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"></LinearLayout>
+        <ImageView
+            android:id="@+id/backbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/vip_back_margin"
+            android:layout_marginStart="@dimen/vip_back_margin"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/vip_back"
+            android:src="@mipmap/backblack" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:text="购买"
+            android:textStyle="bold"
+            android:textSize="17dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:background="@drawable/border_bottom">
+
+        <TextView
+            android:id="@+id/txt1"
+            style="@style/vip_text"
+            android:layout_marginLeft="@dimen/vip_list_margin"
+            android:layout_marginStart="@dimen/vip_list_margin"
+            android:textSize="15.0dp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/txt2"
+            style="@style/vip_text"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="@dimen/vip_list_margin"
+            android:layout_marginRight="@dimen/vip_list_margin"
+            android:text=""
+            android:textSize="13.5dp"
+            android:textStyle="normal" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:background="@drawable/border_bottom">
+
+        <TextView
+            style="@style/vip_text"
+            android:layout_marginLeft="@dimen/vip_list_margin"
+            android:layout_marginStart="@dimen/vip_list_margin"
+            android:text="@string/vip_price_title"
+            android:textStyle="bold"
+            android:textSize="15.0dp" />
+
+        <TextView
+            android:id="@+id/pay_text"
+            style="@style/vip_text"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="@dimen/vip_list_margin"
+            android:layout_marginRight="@dimen/vip_list_margin"
+            android:textSize="13.5dp"
+            android:textStyle="normal" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/color_f5f5f5" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:background="@drawable/border_bottom">
+
+        <TextView
+            style="@style/vip_text"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:text="@string/vip_pay_type"
+            android:textColor="@color/color_828282"
+            android:textSize="12.0dp"
+            android:textStyle="normal" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/aliCheckRL"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/border_bottom">
+
+        <ImageView
+            android:id="@+id/imgAli"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/vip_pay_margin"
+            android:layout_marginStart="@dimen/vip_pay_margin"
+            android:contentDescription="@string/vip_pay_ali"
+            android:src="@mipmap/zhifubao"
+
+            />
+
+        <TextView
+            style="@style/vip_text"
+            android:layout_marginLeft="@dimen/vip_pay_margin"
+            android:layout_marginStart="@dimen/vip_pay_margin"
+            android:layout_toEndOf="@id/imgAli"
+            android:layout_toRightOf="@id/imgAli"
+            android:text="@string/vip_pay_ali"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:id="@+id/imgAliCheck"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/vip_pay_margin"
+            android:layout_marginRight="@dimen/vip_pay_margin"
+            android:contentDescription="@string/vip_pay_ali"
+            android:src="@mipmap/gouxuangoumaifangshi" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/wxCheckRL"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/border_bottom">
+
+        <ImageView
+            android:id="@+id/imgWx"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/vip_pay_margin"
+            android:layout_marginStart="@dimen/vip_pay_margin"
+            android:contentDescription="@string/vip_pay_wx"
+            android:src="@mipmap/weixin"
+
+            />
+
+        <TextView
+            style="@style/vip_text"
+            android:layout_marginLeft="@dimen/vip_pay_margin"
+            android:layout_marginStart="@dimen/vip_pay_margin"
+            android:layout_toEndOf="@id/imgWx"
+            android:layout_toRightOf="@id/imgWx"
+            android:text="@string/vip_pay_wx"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:id="@+id/imgWxCheck"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/vip_pay_margin"
+            android:layout_marginRight="@dimen/vip_pay_margin"
+            android:contentDescription="@string/vip_pay_wx"
+            android:src="@mipmap/weigouxuangoumaifangshi" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:background="@color/color_f5f5f5">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@color/color_f5f5f5"
+            >
+
+            <TextView
+                android:id="@+id/txtTip"
+                style="@style/vip_text"
+                android:layout_centerVertical="false"
+                android:layout_marginLeft="@dimen/vip_tip_margin"
+                android:layout_marginStart="@dimen/vip_tip_margin"
+                android:text="@string/vip_tip_title"
+                android:textStyle="bold"
+                android:textColor="@color/color_9c9c9c"
+                android:textSize="14.0dp" />
+
+            <TextView
+                android:id="@+id/vip_text"
+                style="@style/vip_text"
+                android:layout_below="@id/txtTip"
+                android:layout_marginLeft="@dimen/vip_tip_margin"
+                android:layout_marginStart="@dimen/vip_tip_margin"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/color_9c9c9c"
+                android:textSize="11.0dp"
+                android:textStyle="normal" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/txtPay"
+            style="@style/vip_text"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="82dp"
+            android:background="@mipmap/zhifuanniu"
+            android:gravity="center"
+            android:text="@string/vip_pay"
+            android:textStyle="bold"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,160 @@
+package com.pointhouse.chiguan.h1;
+
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.jakewharton.rxbinding2.view.RxView;
+import com.netease.nim.demo.session.SessionHelper;
+import com.netease.nim.uikit.NimUIKit;
+import com.netease.nim.uikit.common.util.dialog.DialogUtil;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.team.TeamService;
+import com.netease.nimlib.sdk.team.model.Team;
+import com.pointhouse.chiguan.R;
+import com.pointhouse.chiguan.common.util.CommonMediaOption;
+import com.pointhouse.chiguan.common.util.MediaServiceHelper;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static com.pointhouse.chiguan.R.mipmap.team;
+
+/**
+ * 群组适配器
+ * Created by Maclaine on 2017/7/5.
+ */
+
+class GroupAdapter extends BaseAdapter {
+    private final static String TAG = "GroupAdapter";
+    private Context mContext;
+    private List<GroupItem> mList;
+
+    GroupAdapter(Context context, List<GroupItem> list) {
+        mContext = context;
+        mList = list;
+    }
+
+    @Override
+    public int getCount() {
+        return mList.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return mList.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.h1_activity_group_item, parent, false);
+            holder = new ViewHolder();
+            holder.imgGroupImg = (ImageView) convertView.findViewById(R.id.groupImg);
+            holder.txtGroupName = (TextView) convertView.findViewById(R.id.groupName);
+            holder.txtGroupMember = (TextView) convertView.findViewById(R.id.groupMember);
+            holder.txtGroupStatus = (TextView) convertView.findViewById(R.id.groupStatus);
+            convertView.setTag(holder);//将Holder存储到convertView中
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+        if (mList.get(position).getGroupImg() != null) {
+            holder.imgGroupImg.setImageBitmap(mList.get(position).getGroupImg());
+        }
+        RxView.clicks(convertView)
+                .throttleFirst(1, TimeUnit.SECONDS)
+                .subscribe(v -> {
+                    SessionHelper.startTeamSession(mContext,mList.get(position).getGroupID());
+                })
+        ;
+        holder.txtGroupName.setText(mList.get(position).getGroupName());
+        holder.txtGroupMember.setText(mList.get(position).getGroupMember() + "/" + mList.get(position).getGroupMemberMax());
+        if (mList.get(position).getGroupMember() == mList.get(position).getGroupMemberMax()) {
+            holder.txtGroupMember.setTextColor(ContextCompat.getColor(mContext, R.color.color_ff8c5f));
+        } else {
+            holder.txtGroupMember.setTextColor(ContextCompat.getColor(mContext, R.color.color_828282));
+        }
+        switch (mList.get(position).getGroupStatus()) {
+            case 0:
+                holder.txtGroupStatus.setText(mContext.getString(R.string.group_apply_add));
+                holder.txtGroupStatus.setOnClickListener(view -> {
+                    DialogUtil.Builder(mContext)
+                            .setMessage(mContext.getString(R.string.group_apply_add_tip))
+                            .setPositiveButton(mContext.getString(R.string.group_apply_yes), (dialog, witch) -> {
+                                Log.d(TAG, "申请");
+                                NIMClient.getService(TeamService.class).applyJoinTeam("114881924", null).setCallback(new RequestCallback<Team>() {
+                                    @Override
+                                    public void onSuccess(Team team) {
+                                        // 申请成功, 等待验证入群
+                                        Log.d(TAG,"onSuccess");
+                                    }
+
+                                    @Override
+                                    public void onFailed(int code) {
+                                        // 申请失败
+                                        Log.d(TAG,"onFailed:"+code);
+                                        switch (code){
+                                            case 808:
+                                                Toast.makeText(mContext,"申请已发出",Toast.LENGTH_SHORT).show();
+                                                break;
+                                            case 809:
+                                                Toast.makeText(mContext,"已经在群里",Toast.LENGTH_SHORT).show();
+                                                break;
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onException(Throwable exception) {
+                                        // error
+                                        Log.d(TAG,"onException");
+                                        Toast.makeText(mContext,"请求失败",Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                dialog.dismiss();
+                            })
+                            .setNegativeButton(mContext.getString(R.string.group_apply_close), (dialog, witch) -> {
+                                Log.d(TAG, "关闭");
+                                dialog.dismiss();
+                            });
+                });
+                break;
+            case 1:
+                holder.txtGroupStatus.setText(mContext.getString(R.string.group_apply_verify));
+                holder.txtGroupStatus.setOnClickListener(view -> {
+                    DialogUtil.Builder(mContext)
+                            .setMessage(mContext.getString(R.string.group_apply_verify_tip))
+                            .setPositiveButton(mContext.getString(R.string.group_apply_ok), (dialog, witch) -> {
+                                dialog.dismiss();
+                            });
+                });
+                break;
+            default:
+                holder.txtGroupStatus.setText("");
+                holder.txtGroupStatus.setOnClickListener(null);
+                break;
+        }
+        return convertView;
+    }
+
+    static class ViewHolder {
+        ImageView imgGroupImg;
+        TextView txtGroupName;
+        TextView txtGroupMember;
+        TextView txtGroupStatus;
+    }
+}

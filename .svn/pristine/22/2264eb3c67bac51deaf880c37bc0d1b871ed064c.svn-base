@@ -1,0 +1,61 @@
+package com.pointhouse.chiguan.common.jsonObject;
+
+/**
+ * Created by gyh on 2017/9/12.
+ */
+
+public class TestArticleDetailGetBean {
+    public static final String jsonNormal = "{\n" +
+            "    \"exceptions\": [],\n" +
+            "    \"messages\": [],\n" +
+            "    \"resultCode\": 1,\n" +
+            "    \"resultObject\": {\n" +
+            "        \"isPaid\": 0,\n" +
+            "        \"article\": {\n" +
+            "            \"audioList\": [\n" +
+            "                {\n" +
+            "                    \"vid\": \"12998038\",\n" +
+            "                    \"origUrl\": \"http://vodxfturg0k.vod.126.net/vodxfturg0k/2e66d9c5-7901-4aa4-b526-478e78d6d300.mp4\",\n" +
+            "                    \"videoName\": \"音频名\",\n" +
+            "                    \"original\": \"原文\"\n" +
+            "                }\n" +
+            "            ],\n" +
+            "            \"author\": \"Peter\",\n" +
+            "            \"authorAvatar\": \"http://pointhouse.oss-cn-shanghai.aliyuncs.com/course/2017/08/291503972248689980.png\",\n" +
+            "            \"categoryId\": 6,\n" +
+            "            \"categoryTitle\": \"文章分类\",\n" +
+            "            \"content\": \"<p style=\\\"line-height:150%\\\"><br/></p><p style=\\\"text-indent:160px;line-height:150%\\\"><span style=\\\"font-size:16px;line-height:150%;font-family:&#39;Book Antiqua&#39;,&#39;serif&#39;\\\">Text A&nbsp; Can’t Forget Your First Love</span></p><p style=\\\"text-align:right;line-height:150%\\\"><em><span style=\\\"font-size:16px;line-height:150%;font-family:&#39;Book Antiqua&#39;,&#39;serif&#39;\\\">By Meredith Stewart</span></em></p><p style=\\\"text-indent:24px;line-height:150%\\\"><span style=\\\"font-size:16px;line-height:150%;font-family:&#39;Book Antiqua&#39;,&#39;serif&#39;\\\">Somewhere in your house I’m sure you have a collection of old love letters, pictures, cards, stuffed animals and movie tickets from your first love. Diane Ackerman once said, “Everyone admits that love is wonderful and necessary, yet no one agrees on just what it is.” Young love seems to be sweet</span><span style=\\\"font-size: 16px;line-height:150%;font-family:华文中宋\\\">，</span><span style=\\\"font-size:16px;line-height:150%;font-family:&#39;Book Antiqua&#39;,&#39;serif&#39;\\\"> innocent and carefree. Everyone’s first love began with butterflies in their stomach, nervous laughs, being passionate about everything and thinking that he or she was “the one.”</span></p><p style=\\\"text-indent:24px;line-height:150%\\\"><span style=\\\"font-size:16px;line-height:150%;font-family:&#39;Book Antiqua&#39;,&#39;serif&#39;\\\">Your first love is something intense, keen, and maybe even sad, and you will never forget it. It’s the first taste of what you believe is “true love.” He or she was the one and only person who could make or break your world. It was the first time you opened your life, heart and soul to another person and trusted him/her not to hurt you. That’s a huge step in the relationship world. When you look through old things, hear certain songs or one day cross paths with your old flame, your heart will race and your emotions will still get the best of you. There’s always that one guy or girl who captured your heart and will never be forgotten. Whether he or she is still in your life or just a heartache memory, that person will always hold a special place in your heart.</span></p><p style=\\\"text-indent:24px;line-height:150%\\\"><span style=\\\"font-size:16px;line-height:150%;font-family:&#39;Book Antiqua&#39;,&#39;serif&#39;\\\">Katherine Stewart, sophomore multidisciplinary studies major, said, “I remember my first love, just like it was yesterday. We wanted to come to college together, get married and live happily ever after. Reality set in and he moved states away for a big job promotion. I chose to stay here in Greenville and finish my education. After he left, my heart fell apart.”</span></p><p style=\\\"text-indent:24px;line-height:150%\\\"><span style=\\\"font-size:16px;line-height:150%;font-family:&#39;Book Antiqua&#39;,&#39;serif&#39;\\\">Our first loves taught us the good, the bad and the ugly. After the “lovey-dovey” stage passed, the disagreements came. The once perfect love didn’t seem so perfect any longer. Young and innocent, some people stuck through it and tried to make it last as long as possible, while others just took the heartache and learned from it. Two young people in love endure experiences and learn lessons. Having a first sweetheart is a warm feeling, but thinking about the downs of the relationship can bring much pain to one’s soul. </span></p><p style=\\\"text-indent:24px;line-height:150%\\\"><span style=\\\"font-size:16px;line-height:150%;font-family:&#39;Book Antiqua&#39;,&#39;serif&#39;\\\">Dennis Duffy, sophomore communication major, said, “My girlfriend and I were passionate about everything — loving and fighting with each other as well as hurting each other with jealousy and greed.” </span></p><p style=\\\"text-indent:24px;line-height:150%\\\"><span style=\\\"font-size:16px;line-height:150%;font-family:&#39;Book Antiqua&#39;,&#39;serif&#39;\\\">Just like Noah and Allie from The Notebook or Cinderella and her Prince Charming, it’s likely that later in life you will see each other again. When you are least expecting it, you will see your old “soul mate.” Of course over time both of you have let go of the past, but everyone knows that the spark remains. No one makes you feel the way your first real love did.</span></p><p style=\\\"text-indent:24px;line-height:150%\\\"><span style=\\\"font-size:16px;line-height:150%;font-family:&#39;Book Antiqua&#39;,&#39;serif&#39;\\\">Catherine Smith, sophomore English major, said, “It’s been two years since I was with my first love, but when I ran into him over Christmas break, I was almost speechless. He was the first person to really break my heart, but deep down I’ll always love him.”</span></p><p style=\\\"text-indent:24px;line-height:150%\\\"><span style=\\\"font-size:16px;line-height:150%;font-family:&#39;Book Antiqua&#39;,&#39;serif&#39;\\\">Most of the time a first love teaches us things, not saying that everyone wanted to learn all of them. But the lessons that were taught and the experiences that all of us went through were just part of growing up and becoming wiser about oneself. Without mistakes, confrontations and heartache, lessons will not be learned. You grow through these changes, and you are now a stronger person because of them. You can now look back on how trivial the fights were, how insignificant it was that another guy or girl was trying to talk to your lover, and how materialistic stuff doesn’t really mean everything. Even though not many people can really decide what love is, keep in mind that love is not a thing; it’s a feeling.</span></p><p style=\\\"text-indent:24px;line-height:150%\\\"><span style=\\\"font-size:16px;line-height:150%;font-family:&#39;Book Antiqua&#39;,&#39;serif&#39;\\\">I believe Helen Keller best sums it up for us by believing that “the best and most beautiful things in the world can not be seen or even touched. They must be felt within the heart.”</span></p><p><br/></p>\",\n" +
+            "            \"contentType\": 0,\n" +
+            "            \"createDatetime\": \"1999-12-12 00:00:00.0\",\n" +
+            "            \"favoriteNum\": 1,\n" +
+            "            \"id\": 1,\n" +
+            "            \"isRecommend\": 1,\n" +
+            "            \"price\": 0.01,\n" +
+            "            \"reading\": 1,\n" +
+            "            \"status\": 1,\n" +
+            "            \"thumb\": \"http://pointhouse.oss-cn-shanghai.aliyuncs.com/course/2017/08/291503972248689980.png\",\n" +
+            "            \"title\": \"测试文章\",\n" +
+            "            \"type\": 1,\n" +
+            "            \"createDate\": \"2017年8月11日\",\n" +
+            "            \"videoList\": [\n" +
+            "                {\n" +
+            "                    \"vid\": \"13007411\",\n" +
+            "                    \"origUrl\": \"http://vodxfturg0k.vod.126.net/vodxfturg0k/35843209-eac5-4d19-9013-1ee415107bda.mp4\",\n" +
+            "                    \"videoName\": \"视频名\",\n" +
+            "                    \"original\": \"原文\"\n" +
+            "                }\n" +
+            "            ]\n" +
+            "        },\n" +
+            "        \"isFavorite\": 0,\n" +
+            "        \"comments\": [\n" +
+            "            {\n" +
+            "                \"id\": \"1\",\n" +
+            "                \"userId\": \"留言者ID\",\n" +
+            "                \"userName\": \"留言者名\",\n" +
+            "                \"userAvatar\": \"http://pointhouse.oss-cn-shanghai.aliyuncs.com/course/2017/08/291503972248689980.png\",\n" +
+            "                \"content\": \"内容\"\n" +
+            "            }\n" +
+            "        ]\n" +
+            "    }\n" +
+            "}";
+}

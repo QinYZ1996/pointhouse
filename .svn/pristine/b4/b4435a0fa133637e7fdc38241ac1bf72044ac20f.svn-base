@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/listviewlayout"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="101dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="60.5dp"
+            android:layout_height="60.5dp"
+            android:layout_marginLeft="13dp"
+            >
+            <ImageView
+                android:id="@+id/systemitem_imageview"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60.5dp"
+            android:layout_marginLeft="13dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/mymessage_firsttext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15dp"
+                    android:text="入群审核结果"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textColor="#000000"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:id="@+id/sysdateText"
+                    android:textSize="12dp"
+                    android:textColor="#a2a2a2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="08-24 10:35"
+                    android:layout_gravity="right|center_vertical"/>
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/mymessage_secondtext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="12dp"
+                android:paddingTop="6dp"
+                android:text="小鸭子英语一群"
+                android:textColor="#828282"/>
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="86.5dp"
+        android:background="#f2f3f4"
+        />
+
+</LinearLayout>

@@ -1,0 +1,34 @@
+package com.pointhouse.chiguan.common.jsonObject;
+
+/**
+ * Created by ljj on 2017/7/26.
+ */
+public class TestLessonDetailJson {
+    public final static String LessonDetailJson1 = "{\n" +
+            "    \"exceptions\": [{\n" +
+            "                         \"id\": \" \",\n" +
+            "                    \"message\": \"该课程不存在！/请先购买课程专辑/请先登录！\"\n" +
+            "                  }],\n" +
+            "    \"messages\": [],\n" +
+            "    \"resultCode\": 1,\n" +
+            "    \"resultObject\":{\n" +
+            "               \"lesson\":{\n" +
+            "                        \"abouts\": \"课程简介，富文本\",\n" +
+            "                        \"audios\": [{\"vid\":\"d5faf7a5-740e-406e-9021-887ad7af7bc9\",\"origUrl\":\"http://vodfp3j4om5.vod.126.net/vodfp3j4om5/d5faf7a5-740e-406e-9021-887ad7af7bc9.mp4\",\"videoName\":\"音频频名\",\"original\":\"原文\"}\n" +
+            "                         ,{\"vid\":\"CbUPxVWo_5196642_hd\",\"origUrl\":\"http://vodfp3j4om5.vod.126.net/vodfp3j4om5/CbUPxVWo_5196642_hd.flv\",\"videoName\":\"音频频名\",\"original\":\"原文\"}],\n" +
+            "                        \"content\": \"课程内容，富文本\",\n" +
+            "                        \"courseId\": 1,\n" +
+            "                        \"createDatetime\": \"创建时间\",\n" +
+            "                        \"id\": 1,\n" +
+            "                        \"learnTime\": 1200, \n" +
+            "                        \"thumb\": \"课程缩略图\",\n" +
+            "                        \"title\": \"课程标题\",\n" +
+            "                        \"type\": 1,\n" +
+            "                        \"hasExercises\":1,\n" +
+            "                        \"videos\": [{\"vid\":\"0a1f6997-36d5-4022-b8b7-1914854630db\",\"origUrl\":\"http://vodfp3j4om5.vod.126.net/vodfp3j4om5/0a1f6997-36d5-4022-b8b7-1914854630db.mp4\",\"videoName\":\"视频名\",\"original\":\"原文\"}]\n" +
+            "                        },\n" +
+            "          \"learnStatus\":0,\n" +
+            "         \"learnProcess\":20\n" +
+            "     }\n" +
+            "}";
+}

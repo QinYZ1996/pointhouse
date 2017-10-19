@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/viewMain"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FFFFFF"
+                android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.pointhouse.chiguan.common.layout.MyScrollView
+            android:id="@+id/viewScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/viewFrameContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!--视频-->
+                    <include layout="@layout/common_media"/>
+
+                    <RelativeLayout
+                        android:id="@+id/viewTextOnly"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone">
+
+                        <WebView
+                            android:id="@+id/textOnlyContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="50dp"
+                            android:text="@string/media_reading"
+                            android:textStyle="bold"/>
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/viewContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/viewFrameContainer">
+
+                    <RelativeLayout
+                        android:id="@+id/relative2"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#f3f5f6"/>
+
+                    <!--课程名-->
+                    <RelativeLayout
+                        android:id="@+id/relative3"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_below="@id/relative2">
+
+                        <TextView
+                            android:id="@+id/tv_course_name"
+                            style="@style/media_text"
+                            android:layout_marginLeft="11dp"
+                            android:layout_marginStart="11dp"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textSize="16dp"
+                            android:textStyle="bold"/>
+                    </RelativeLayout>
+
+                    <!--分割线-->
+                    <RelativeLayout
+                        android:id="@+id/relative4"
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:layout_below="@id/relative3"
+                        android:background="#f3f5f6"/>
+
+                    <!--TABS-->
+                    <TabHost
+                        android:id="@+id/tabHost"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/relative4">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TabWidget
+                                android:id="@android:id/tabs"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:background="#f3f5f6"/>
+
+                            <FrameLayout
+                                android:id="@android:id/tabcontent"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <RelativeLayout
+                                    android:id="@+id/rl_introduce"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                    <WebView
+                                        android:id="@+id/wv_introduce"
+                                        style="@style/media_text"
+                                        android:layout_centerVertical="false"
+                                        android:layout_marginTop="30dp"
+                                        android:textStyle="bold"/>
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/rl_content"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                    <WebView
+                                        android:id="@+id/wv_content"
+                                        style="@style/media_text"
+                                        android:layout_centerVertical="false"
+                                        android:layout_marginTop="30dp"
+                                        android:textStyle="bold"/>
+                                </RelativeLayout>
+                            </FrameLayout>
+                        </LinearLayout>
+                    </TabHost>
+                </RelativeLayout>
+            </RelativeLayout>
+        </com.pointhouse.chiguan.common.layout.MyScrollView>
+
+        <RelativeLayout
+            android:id="@+id/image_back_white_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="top">
+
+            <ImageView
+                android:layout_width="7.5dp"
+                android:layout_height="14dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="13dp"
+                android:layout_marginRight="10dp"
+                android:src="@mipmap/backwhite"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/title_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="top"
+            android:background="@color/white">
+
+            <RelativeLayout
+                android:id="@+id/sharearticle_back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="7.5dp"
+                    android:layout_height="14dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@mipmap/backblack"/>
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_alignParentBottom="true"
+                android:background="#f3f5f6"/>
+        </RelativeLayout>
+    </FrameLayout>
+</RelativeLayout>

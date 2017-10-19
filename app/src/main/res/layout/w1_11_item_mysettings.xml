@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/mysettings_item_lefttext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="15dp"
+            android:text="修改密码"
+            android:textColor="#000000"
+            android:layout_marginLeft="22dp" />
+
+        <ImageView
+            android:id="@+id/mysettings_item_rightimageview"
+            android:background="@mipmap/forwardgray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="18dp"/>
+    </LinearLayout>
+    <View
+        android:id="@+id/dview"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="22dp"
+        android:background="#f2f3f4"
+        />
+</LinearLayout>

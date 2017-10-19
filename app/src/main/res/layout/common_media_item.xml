@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="15dp"
+    android:paddingStart="15dp"
+    android:background="@drawable/border_bottom"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtMusicID"
+        android:visibility="gone"
+        />
+
+    <ImageView
+        android:id="@+id/imgPlayStatus"
+        android:layout_width="21dp"
+        android:layout_height="20.5dp"
+        android:src="@mipmap/zhengzaibofang"
+        android:visibility="gone"
+        android:layout_marginRight="4dp"
+        android:layout_marginEnd="4dp"
+        android:contentDescription="@string/media_playing" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtMusic"
+        android:textSize="13.0dp"
+        android:textColor="#333333"
+        android:text="@string/media_reading"
+        />
+
+</LinearLayout>

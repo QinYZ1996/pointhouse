@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="@dimen/course_table_row_width"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/courselistImg"
+            android:gravity="center_horizontal"
+            android:layout_width="35.5dp"
+            android:layout_height="35.5dp" />
+
+        <TextView
+            android:id="@+id/courselistName"
+            android:layout_width="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            android:textColor="#343434"
+            android:textSize="12dp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+</LinearLayout>

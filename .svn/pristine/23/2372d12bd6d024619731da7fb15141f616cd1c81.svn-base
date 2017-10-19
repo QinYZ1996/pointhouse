@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.pointhouse.chiguan.welcome.SplashActivity">
+
+    <!-- 定义一个用于显示welcome screen的ImageView -->
+    <ImageView
+        android:id="@+id/splashImg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/screen"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"/>
+
+</android.support.constraint.ConstraintLayout>

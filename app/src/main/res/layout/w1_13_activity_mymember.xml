@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="left">
+        <RelativeLayout
+            android:onClick="Member_back"
+            android:id="@+id/mymember_backbtn"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="13dp">
+            <Button
+                android:onClick="Member_back"
+                android:layout_width="10dp"
+                android:layout_height="18dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="14dp"
+                android:background="@mipmap/backblack"/>
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/custom_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="我的会员"
+            android:textColor="#000000"
+            android:textSize="19dp"/>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/mymember_topview"
+        android:layout_width="match_parent"
+        android:layout_height="11dp"
+        android:background="#f2f3f4" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="180dp"
+            android:id="@+id/mymember_listview">
+
+        </ListView>
+
+        <View
+            android:id="@+id/mymember_view"
+            android:layout_width="match_parent"
+            android:layout_height="11dp"
+            android:background="#f2f3f4" />
+
+        <ImageView
+            android:layout_marginTop="22dp"
+            android:layout_width="23dp"
+            android:layout_height="21dp"
+            android:layout_marginLeft="15dp"
+            android:background="@mipmap/huiyuanhuangguan"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="会员特权"
+            android:textSize="18dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="-6dp"
+            android:textColor="#333333"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginTop="13.5dp"
+            android:background="@drawable/background_round">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:background="@drawable/number_background"
+                        android:gravity="center"
+                        android:text="1"
+                        android:textColor="@color/white"
+                        android:textSize="12dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="12dp"
+                        android:gravity="center|left"
+                        android:text="会员可免费进入除特殊情况说明外的所有课程学习。"
+                        android:textColor="#e1c479"
+                        android:textSize="12dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:background="@drawable/number_background"
+                        android:gravity="center"
+                        android:text="2"
+                        android:textColor="@color/white"
+                        android:textSize="12dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="12dp"
+                        android:gravity="center|left"
+                        android:text="会员可优先获得参与部分线下活动的名额。"
+                        android:textColor="#e1c479"
+                        android:textSize="12dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:background="@drawable/number_background"
+                        android:gravity="center"
+                        android:text="3"
+                        android:textColor="@color/white"
+                        android:textSize="12dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="12dp"
+                        android:gravity="center|left"
+                        android:text="会员可免费获赠部分商品。"
+                        android:textColor="#e1c479"
+                        android:textSize="12dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:background="@drawable/number_background"
+                        android:gravity="center"
+                        android:text="4"
+                        android:textColor="@color/white"
+                        android:textSize="12dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="12dp"
+                        android:gravity="center|left"
+                        android:text="会员权利从购买日期起一年内有效。"
+                        android:textColor="#e1c479"
+                        android:textSize="12dp" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:gravity="bottom"
+        >
+
+        <Button
+            android:id="@+id/mymember_paybtn"
+            android:layout_width="314.5dp"
+            android:layout_height="38.5dp"
+            android:layout_marginBottom="12dp"
+            android:layout_gravity="center"
+            android:background="@mipmap/chongzhixufeianniu"
+            android:text="立即购买/续费" />
+    </RelativeLayout>
+
+</LinearLayout>

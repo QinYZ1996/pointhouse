@@ -1,0 +1,353 @@
+package com.pointhouse.chiguan.k1_10;
+
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TabHost;
+import android.widget.TextView;
+
+import com.pointhouse.chiguan.Application.CommonMedia;
+import com.pointhouse.chiguan.R;
+import com.pointhouse.chiguan.common.base.MediaBaseActivity;
+import com.pointhouse.chiguan.common.http.RetrofitFactory;
+import com.pointhouse.chiguan.common.jsonObject.LessonDetailGetBean;
+import com.pointhouse.chiguan.common.util.CommonMediaOption;
+import com.pointhouse.chiguan.common.util.DensityUtil;
+import com.pointhouse.chiguan.common.util.JsonUtil;
+import com.pointhouse.chiguan.common.util.ToastUtil;
+import com.pointhouse.chiguan.k1_3.Course;
+import com.pointhouse.chiguan.k1_3.Lesson;
+import com.pointhouse.chiguan.k1_3.Media;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
+/**
+ * Created by gyh on 2017/7/20.
+ */
+
+public class CourseAuditionActivity extends MediaBaseActivity {
+
+    private static final String TAG = "K1-10";
+
+    //控件定义
+    private TabHost tabHost;
+    private View viewContent, viewPop;
+    private CommonMedia commonMedia;
+    private WebView introduce, content, textOnlyContent;
+    private RelativeLayout viewMain, media;
+    private FrameLayout textOnlyLayout;
+    private PopupWindow popWindow;
+    private ImageView imgBack;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.k1_10_activity_courseaudition);
+
+        Intent intent = getIntent();
+        int lessonId = intent.getIntExtra("lessonId", -1);
+        CommonMediaOption option = (CommonMediaOption) intent.getSerializableExtra("option");
+        initView(lessonId, option);
+    }
+
+    /**
+     * 初始化Layout
+     *
+     * @param lessonId 课程ID
+     */
+    private void initView(int lessonId, CommonMediaOption optionFromParam) {
+        // 绑定控件
+        tabHost = (TabHost) findViewById(R.id.tabHost);
+        viewContent = findViewById(R.id.viewContent);
+        introduce = (WebView) findViewById(R.id.wv_introduce);
+        content = (WebView) findViewById(R.id.wv_content);
+        viewMain = (RelativeLayout) findViewById(R.id.viewMain);
+        media = (RelativeLayout) findViewById(R.id.commonMedia);
+        textOnlyLayout = (FrameLayout) findViewById(R.id.viewTextOnly);
+        textOnlyContent = (WebView) findViewById(R.id.textOnlyContent);
+        viewPop = LayoutInflater.from(this).inflate(R.layout.k1_10_popwindow, null, false);
+        imgBack = (ImageView) viewPop.findViewById(R.id.imgBack);
+        popWindow = new PopupWindow(viewPop, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+        popWindow.setFocusable(false);
+        popWindow.setOutsideTouchable(false);
+        // 解决tab切换、全屏后返回引起的layout重置问题
+        introduce.setFocusable(false);
+        content.setFocusable(false);
+
+        // 初始化Tab
+        tabHost.setup();
+        // 介绍tab
+//        RelativeLayout introduceTabIndicator = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.k1_indicator_tab, null);
+        RelativeLayout introduceTabIndicator = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.k1_indicator_tab, tabHost.getTabWidget(), false);
+        TextView introduceTabTitle = (TextView) introduceTabIndicator.findViewById(R.id.title);
+        introduceTabTitle.setText(getString(R.string.k1_10_tab_title_introduce));
+        tabHost.addTab(tabHost.newTabSpec("tabIntroduce").setIndicator(introduceTabIndicator).setContent(R.id.rl_introduce));
+        // 文本tab
+//        RelativeLayout contentTabIndicator = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.k1_indicator_tab, null);
+        RelativeLayout contentTabIndicator = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.k1_indicator_tab, tabHost.getTabWidget(), false);
+        TextView contentTabTitle = (TextView) contentTabIndicator.findViewById(R.id.title);
+        contentTabTitle.setText(getString(R.string.k1_10_tab_title_content));
+        tabHost.addTab(tabHost.newTabSpec("tabContent").setIndicator(contentTabIndicator).setContent(R.id.rl_content));
+        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
+            View view = tabHost.getTabWidget().getChildAt(i);
+            view.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> v.findViewById(R.id.backLine).getLayoutParams().width = (int) (v.getWidth() * 0.6));
+        }
+        //设置监听
+        tabHost.setOnTabChangedListener(tabId -> {
+            for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
+                View view = tabHost.getTabWidget().getChildAt(i);
+                View backLine = view.findViewById(R.id.backLine);
+                TextView text = (TextView) view.findViewById(R.id.title);
+                if (tabHost.getCurrentTab() == i) {
+                    backLine.setBackgroundColor(ContextCompat.getColor(this, R.color.color_3c5fc5));
+                    text.setTextColor(ContextCompat.getColor(this, R.color.color_3c5fc5));
+                } else {
+                    backLine.setBackgroundColor(0xFFFFFFFF);
+                    text.setTextColor(ContextCompat.getColor(this, R.color.color_818181));
+                }
+            }
+        });
+        tabHost.setCurrentTab(1);
+        tabHost.setCurrentTab(0);
+
+        // 初始化媒体控件
+        boolean isInit;
+        boolean isMusic;
+        CommonMediaOption option;
+        if (optionFromParam == null) {
+            isInit = true;
+            isMusic = true;
+            option = new CommonMediaOption();
+        } else { // 音视频切换
+            isInit = false;
+            option = optionFromParam;
+            isMusic = option.getType() == CommonMediaOption.MUSIC_MIX;
+            lessonId = option.getCourse().getLesson().getId();
+        }
+        option.setId(-1);
+        option.setShowRepeat(false);
+        option.setShowExerciseClose(false);
+        option.setShowCourseList(false);
+
+        // 数据绑定
+        String url = JsonUtil.getURLWithArrayParamIfExists("lessonDetail", String.valueOf(lessonId));
+        RetrofitFactory.getInstance().getRequestServicesToken().get(url)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            // 媒体数据绑定
+                            LessonDetailGetBean lessonDetail = new LessonDetailGetBean(result.toJSONString());
+                            if (lessonDetail.hasError()) {
+                                ToastUtil.getToast(this, JsonUtil.getRequestErrMsg(TAG, this, result), "center", 0, 180).show();
+                            } else {
+                                LessonDetailGetBean.ResultObjectBean.LessonBean lessonBean = lessonDetail.getResultObjectBean().getLesson();
+                                String text;
+                                if (lessonBean.getLessonType() == 0) { // 文本
+                                    media.setVisibility(View.GONE);
+                                    viewContent.setVisibility(View.GONE);
+                                    textOnlyLayout.setVisibility(View.VISIBLE);
+                                    popWindow.showAtLocation(findViewById(R.id.viewMain), Gravity.TOP, 0, 0);
+                                    imgBack.setOnClickListener(v -> super.onBackPressed());
+                                    textOnlyContent.getSettings().setDefaultTextEncodingName("UTF -8");
+                                    text = lessonBean.getContent();
+                                    textOnlyContent.loadData(text == null ? "" : text.replace("<img", "<img style=\"width:100%;\""), "text/html; charset=UTF-8", null);
+                                } else {
+                                    if (isInit) {
+                                        initOption(option, lessonBean);
+                                    }
+                                    commonMedia = new CommonMedia(this, option);
+                                    commonMedia.prepareAsync();
+
+                                    // 课程名
+                                    TextView tv = (TextView) findViewById(R.id.tv_course_name);
+                                    tv.setText(lessonBean.getTitle());
+                                    // 介绍
+                                    text = lessonBean.getAbouts();
+                                    introduce.getSettings().setDefaultTextEncodingName("UTF -8");
+                                    introduce.loadData(text == null ? "" : text.replace("<img", "<img style=\"width:100%;\""), "text/html; charset=UTF-8", null);
+                                    // 文本
+                                    content.getSettings().setDefaultTextEncodingName("UTF -8");
+                                    List<LessonDetailGetBean.ResultObjectBean.LessonBean.AudioListBean> audiosList;
+                                    List<LessonDetailGetBean.ResultObjectBean.LessonBean.VideoListBean> videosList;
+                                    switch (lessonBean.getLessonType()) {
+                                        case 1: // 音频
+                                            audiosList = lessonBean.getAudioList();
+                                            if (audiosList != null && audiosList.size() > 0) {
+                                                text = audiosList.get(0).getOriginal();
+                                                content.loadData(text == null ? "" : text.replace("<img", "<img style=\"width:100%;\""), "text/html; charset=UTF-8", null);
+                                            }
+                                            break;
+                                        case 2: // 视频
+                                            videosList = lessonBean.getVideoList();
+                                            if (videosList != null && videosList.size() > 0) {
+                                                text = videosList.get(0).getOriginal();
+                                                content.loadData(text == null ? "" : text.replace("<img", "<img style=\"width:100%;\""), "text/html; charset=UTF-8", null);
+                                            }
+                                            break;
+                                        case 4: // 音频+视频
+                                            if (isMusic) {
+                                                audiosList = lessonBean.getAudioList();
+                                                if (audiosList != null && audiosList.size() > 0) {
+                                                    text = audiosList.get(0).getOriginal();
+                                                    content.loadData(text == null ? "" : text.replace("<img", "<img style=\"width:100%;\""), "text/html; charset=UTF-8", null);
+                                                }
+                                            } else {
+                                                videosList = lessonBean.getVideoList();
+                                                if (videosList != null && videosList.size() > 0) {
+                                                    text = videosList.get(0).getOriginal();
+                                                    content.loadData(text == null ? "" : text.replace("<img", "<img style=\"width:100%;\""), "text/html; charset=UTF-8", null);
+                                                }
+                                            }
+                                            break;
+                                    }
+                                }
+                            }
+                        },
+                        throwable -> {
+                            Log.e(TAG, throwable.getMessage());
+                            ToastUtil.getToast(this, getString(R.string.req_fail_msg), "center", 0, 180).show();
+                        });
+    }
+
+    /**
+     * 取得媒体数据所需参数
+     *
+     * @param option     媒体参数
+     * @param lessonBean 课程详细
+     * @return
+     */
+    private void initOption(
+            CommonMediaOption option,
+            LessonDetailGetBean.ResultObjectBean.LessonBean lessonBean) {
+        Course course = new Course();
+        Lesson lesson = new Lesson();
+        lesson.setId(lessonBean.getId());
+        lesson.setTitle(lessonBean.getTitle());
+        course.setLesson(lesson);
+        option.setCourse(course);
+
+        List<Media> audios;
+        List<Media> videos;
+        List<LessonDetailGetBean.ResultObjectBean.LessonBean.AudioListBean> audiosList;
+        List<LessonDetailGetBean.ResultObjectBean.LessonBean.VideoListBean> videosList;
+        switch (lessonBean.getLessonType()) {
+            case 1: // 音频
+                option.setType(CommonMediaOption.MUSIC_ONLY);
+                audios = new ArrayList<>();
+                lesson.setAudioList(audios);
+                audiosList = lessonBean.getAudioList();
+                if (audiosList != null && audiosList.size() > 0) {
+                    for (LessonDetailGetBean.ResultObjectBean.LessonBean.AudioListBean ab : audiosList) {
+                        Media video = new Media();
+                        video.setVid(ab.getVid());
+                        video.setVideoName(ab.getVideoName());
+                        video.setOrigUrl(ab.getOrigUrl());
+                        audios.add(video);
+                    }
+                    option.setMediaID(audios.get(0).getVid());
+                }
+                break;
+            case 2: // 视频
+                option.setType(CommonMediaOption.VIDEO_ONLY);
+                videos = new ArrayList<>();
+                lesson.setVideoList(videos);
+                videosList = lessonBean.getVideoList();
+                if (videosList != null && videosList.size() > 0) {
+                    for (LessonDetailGetBean.ResultObjectBean.LessonBean.VideoListBean vb : videosList) {
+                        Media video = new Media();
+                        video.setVid(vb.getVid());
+                        video.setVideoName(vb.getVideoName());
+                        video.setOrigUrl(vb.getOrigUrl());
+                        videos.add(video);
+                    }
+                    option.setMediaID(videos.get(0).getVid());
+                }
+                break;
+            case 4: // 音频+视频
+                option.setType(CommonMediaOption.AUTO);
+                audios = new ArrayList<>();
+                lesson.setAudioList(audios);
+                audiosList = lessonBean.getAudioList();
+                if (audiosList != null && audiosList.size() > 0) {
+                    for (LessonDetailGetBean.ResultObjectBean.LessonBean.AudioListBean ab : audiosList) {
+                        Media video = new Media();
+                        video.setVid(ab.getVid());
+                        video.setVideoName(ab.getVideoName());
+                        video.setOrigUrl(ab.getOrigUrl());
+                        audios.add(video);
+                    }
+                    option.setMediaID(audiosList.get(0).getVid());
+                }
+                videos = new ArrayList<>();
+                lesson.setVideoList(videos);
+                videosList = lessonBean.getVideoList();
+                if (videosList != null) {
+                    for (LessonDetailGetBean.ResultObjectBean.LessonBean.VideoListBean vb : videosList) {
+                        Media video = new Media();
+                        video.setVid(vb.getVid());
+                        video.setVideoName(vb.getVideoName());
+                        video.setOrigUrl(vb.getOrigUrl());
+                        videos.add(video);
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (commonMedia != null) {
+            commonMedia.onConfigurationChanged(newConfig);
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {//横屏
+                viewContent.setVisibility(View.GONE);
+            } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {//竖屏
+                viewContent.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (commonMedia != null) {
+            commonMedia.close();
+        }
+        if (popWindow != null) {
+            popWindow.dismiss();
+        }
+    }
+}

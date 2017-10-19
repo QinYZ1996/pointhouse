@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout01" android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <com.pointhouse.chiguan.common.updatelayout.PullToRefreshScrollView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pull_refresh_scrollview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrDrawable="@mipmap/xsearch_msg_pull_arrow_down"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+        <!-- 主题图片 -->
+        <com.pointhouse.chiguan.k1.SlideShowView
+            android:id="@+id/slideshowView"
+            android:layout_width="fill_parent"
+            android:layout_height="180dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+        <HorizontalScrollView
+                android:id="@+id/courselisttable"
+                android:scrollbars="none"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/slideshowView">
+            <TableRow
+                android:id="@+id/courseTableRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+            </TableRow>
+        </HorizontalScrollView>
+        <View
+            android:id="@+id/viewline"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/grayColor" />
+        <RelativeLayout
+            android:id="@+id/RelativeLayout"
+            android:layout_height="34dp"
+            android:layout_width="match_parent"
+            android:layout_below="@id/viewline">
+            <ImageView
+                android:id="@+id/listheader"
+                android:layout_width="2.5dp"
+                android:layout_height="15dp"
+                android:layout_marginLeft="13dp"
+                android:layout_marginTop="15.5dp"
+                android:src="@mipmap/header" />
+            <TextView
+                android:layout_toRightOf="@id/listheader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="@string/chiguan_course"
+                android:textColor="#111111"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="16dp"
+                android:textStyle="bold"/>
+            <ImageView
+                android:id="@+id/listheadermore"
+                android:layout_alignParentRight="true"
+                android:layout_width="5dp"
+                android:layout_height="8dp"
+                android:layout_marginTop="20.5dp"
+                android:layout_marginRight="13dp"
+                android:src="@mipmap/forwardgray" />
+            <TextView
+                android:id="@+id/listheadermoreText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:layout_toLeftOf="@id/listheadermore"
+                android:text="@string/more"
+                android:textColor="#838383"
+                android:layout_marginTop="18dp"
+                android:layout_marginRight="18dp"
+                android:textSize="13dp" />
+        </RelativeLayout>
+        <ListView
+            android:id="@+id/viewCourseList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null">
+        </ListView>
+
+        <View
+            android:id="@+id/viewline10"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/grayColor" />
+        <RelativeLayout
+            android:id="@+id/RelativeLayout10"
+            android:layout_height="34dp"
+            android:layout_width="match_parent"
+            android:layout_below="@id/viewline10">
+            <ImageView
+                android:id="@+id/listheader10"
+                android:layout_width="2.5dp"
+                android:layout_height="15dp"
+                android:layout_marginLeft="13dp"
+                android:layout_marginTop="15.5dp"
+                android:src="@mipmap/header" />
+            <TextView
+                android:layout_toRightOf="@id/listheader10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="池馆分享"
+                android:textColor="#111111"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="16dp"
+                android:textStyle="bold"/>
+            <ImageView
+                android:id="@+id/listheadermore10"
+                android:layout_alignParentRight="true"
+                android:layout_width="5dp"
+                android:layout_height="8dp"
+                android:layout_marginTop="20.5dp"
+                android:layout_marginRight="13dp"
+                android:src="@mipmap/forwardgray" />
+            <TextView
+                android:id="@+id/listheadermoreText10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:layout_toLeftOf="@id/listheadermore10"
+                android:text="@string/more"
+                android:textColor="#838383"
+                android:layout_marginTop="18dp"
+                android:layout_marginRight="18dp"
+                android:textSize="13dp" />
+        </RelativeLayout>
+        <ListView
+            android:id="@+id/viewArticleList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null">
+        </ListView>
+        </LinearLayout>
+    </com.pointhouse.chiguan.common.updatelayout.PullToRefreshScrollView>
+</LinearLayout>

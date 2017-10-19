@@ -1,0 +1,691 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.pointhouse.chiguan">
+    <!--允许读写外部存储-->
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS"/>
+
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS"/>
+    <!--允许程序读取底层系统日志文件-->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <!-- 蓝牙分享所需的权限 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- SDCard中创建与删除文件权限 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <!-- 多媒体相关 -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
+
+    <!-- SDK 权限申明 -->
+    <permission
+        android:name="com.pointhouse.chiguan.permission.RECEIVE_MSG"
+        android:protectionLevel="signature"/>
+    <!-- 接收 SDK 消息广播权限-->
+    <uses-permission
+        android:name="com.pointhouse.chiguan.permission.RECEIVE_MSG"/>
+    <uses-permission
+        android:name="com.pointhouse.chiguan.permission.JPUSH_MESSAGE"
+        android:protectionLevel="signature"/>
+    <!--悬浮窗-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <!--api17以下需要task权限-->
+    <uses-permission
+        android:name="android.permission.GET_TASKS"
+        android:maxSdkVersion="16"/>
+
+    <!--启动类-->
+    <application
+        android:name=".Application.GlobalApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name_cn"
+        tools:replace="android:label"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:largeHeap="true">
+
+        <!-- 欢迎画面 -->
+        <activity
+            android:name=".welcome.SplashActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="pointhouse"
+                    android:path="/welcome"
+                    android:port="8888"
+                    android:scheme="chiguan"/>
+            </intent-filter>
+        </activity>
+
+        <!--主画面-->
+        <activity android:name=".t1.FatherActivity"
+            android:screenOrientation="portrait">
+
+            <!--scheme配置-->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="pointhouse"
+                    android:path="/t1"
+                    android:port="8888"
+                    android:scheme="chiguan"/>
+            </intent-filter>
+        </activity>
+
+        <!--登录模块-->
+        <activity android:name=".l1.Login_activity"
+            android:screenOrientation="portrait">
+
+            <!--低版本配置需要配置才能返回上一页面-->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".l1_1.Register_Activity">
+            </meta-data>
+            <!--scheme配置-->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="pointhouse"
+                    android:path="/l1"
+                    android:port="8888"
+                    android:scheme="chiguan"/>
+            </intent-filter>
+        </activity>
+
+        <!--微信第三方登录模块-->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+
+        <!--注册模块-->
+        <activity
+            android:name=".l1_1.Register_Activity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="pointhouse"
+                    android:path="/l1_1"
+                    android:port="8888"
+                    android:scheme="chiguan"/>
+            </intent-filter>
+        </activity>
+
+
+        <!--查看用户协议-->
+        <activity
+            android:name=".l1_2.Protocol_Activity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <!--找回密码-->
+        <activity
+            android:name=".w1_14.FindPsw_activity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="pointhouse"
+                    android:path="/w1_14"
+                    android:port="8888"
+                    android:scheme="chiguan"/>
+            </intent-filter>
+        </activity>
+
+
+        <!--我的收藏-->
+        <activity
+            android:name=".w1_4.MyCollectionActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="pointhouse"
+                    android:path="/w1_4"
+                    android:port="8888"
+                    android:scheme="chiguan"/>
+            </intent-filter>
+        </activity>
+
+
+
+        <!--我的消息-->
+        <activity
+            android:name=".w1_10.MyMessageActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="pointhouse"
+                    android:path="/w1_10"
+                    android:port="8888"
+                    android:scheme="chiguan"/>
+            </intent-filter>
+        </activity>
+
+
+
+        <!--课程精选-->
+        <activity
+            android:name=".k1_1.CourseListActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <!--我的小组-->
+        <activity
+            android:name=".w1_2.MyGroupActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <!--分享文章列表画面-->
+        <activity
+            android:name=".k1_14.ShareListActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <!--分享文章详细画面-->
+        <activity
+            android:name=".k1_9.ShareArticleActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="pointhouse"
+                    android:path="/k1_9"
+                    android:port="8888"
+                    android:scheme="chiguan"/>
+            </intent-filter>
+        </activity>
+
+        <!--购买课程详细页面-->
+        <activity
+            android:name=".k1_2.CourseDetailsActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="pointhouse"
+                    android:path="/k1_2"
+                    android:port="8888"
+                    android:scheme="chiguan"/>
+            </intent-filter>
+        </activity>
+
+        <!--老师详细页面-->
+        <activity
+            android:name=".k1_8.TeacherDetailActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <!--购买页面-->
+        <activity
+            android:name=".k1_4.PayActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <!--检索页面-->
+        <activity
+            android:name=".k1_5.SearchViewActivity"
+            android:windowSoftInputMode="stateVisible"
+            android:exported="true"
+            android:screenOrientation="portrait">
+        </activity>
+
+
+        <!--修改昵称-->
+        <activity
+            android:name=".w1_9.EditNicknameActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+        </activity>
+        <!--下载service-->
+        <service android:name=".k1_2.DownloadService"/>
+
+        <!--我的购买-->
+        <activity
+            android:name=".w1_1.MyPurchaseActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+
+        <!--我的会员-->
+        <activity
+            android:name=".w1_13.MyMemberActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="pointhouse"
+                    android:path="/w1_13"
+                    android:port="8888"
+                    android:scheme="chiguan"/>
+            </intent-filter>
+        </activity>
+
+
+        <!--我的资料-->
+        <activity
+            android:name=".w1_7.MydataActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="pointhouse"
+                    android:path="/w1_7"
+                    android:port="8888"
+                    android:scheme="chiguan"/>
+            </intent-filter>
+
+        </activity>
+
+        <!--我的学习-->
+        <activity
+            android:name=".w1_3.MyStudyActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+
+        <!--我的设置-->
+        <activity
+            android:name=".w1_11.MySettingsActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="pointhouse"
+                    android:path="/w1_11"
+                    android:port="8888"
+                    android:scheme="chiguan"/>
+            </intent-filter>
+        </activity>
+
+        <!--修改密码-->
+        <activity
+            android:name=".w1_12.EditPassWordActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="pointhouse"
+                    android:path="/w1_12"
+                    android:port="8888"
+                    android:scheme="chiguan"/>
+            </intent-filter>
+        </activity>
+
+
+        <!-- Required SDK 核心功能-->
+        <!-- 可配置android:process参数将PushService放在其他进程中 -->
+        <service
+            android:name="cn.jpush.android.service.PushService"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTER"/>
+                <action android:name="cn.jpush.android.intent.REPORT"/>
+                <action android:name="cn.jpush.android.intent.PushService"/>
+                <action android:name="cn.jpush.android.intent.PUSH_TIME"/>
+            </intent-filter>
+        </service>
+
+        <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
+        <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->
+        <service
+            android:name="cn.jpush.android.service.DaemonService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.DaemonService"/>
+                <category android:name="com.pointhouse.chiguan"/>
+            </intent-filter>
+        </service>
+
+        <!-- Required SDK核心功能-->
+        <receiver
+            android:name="cn.jpush.android.service.PushReceiver"
+            android:enabled="true">
+            <intent-filter android:priority="1000">
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY"/>   <!--Required  显示通知栏 -->
+                <category android:name="com.pointhouse.chiguan"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+            <!-- Optional -->
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- Required SDK核心功能-->
+        <activity
+            android:name="cn.jpush.android.ui.PushActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="false"
+            android:theme="@android:style/Theme.NoTitleBar">
+            <intent-filter>
+                <action android:name="cn.jpush.android.ui.PushActivity"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="com.pointhouse.chiguan"/>
+            </intent-filter>
+        </activity>
+
+
+        <!-- Required SDK核心功能-->
+        <service
+            android:name="cn.jpush.android.service.DownloadService"
+            android:enabled="true"
+            android:exported="false">
+        </service>
+
+        <!-- Required SDK核心功能-->
+        <receiver
+            android:name="cn.jpush.android.service.AlarmReceiver"
+            android:exported="false"/>
+        <receiver
+            android:name="com.pointhouse.chiguan.jpush.JPushReceiver"
+            android:exported="false"
+            android:enabled="true"/>
+        <receiver
+            android:name=".common.api.JGReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <!--Required 用户注册SDK的intent-->
+                <action android:name="cn.jpush.android.intent.REGISTRATION"/>
+                <!--Required 用户接收SDK消息的intent-->
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED"/>
+                <!--Required 用户接收SDK通知栏信息的intent-->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED"/>
+                <!--Required 用户打开自定义通知栏的intent-->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED"/>
+                <!-- 接收网络变化 连接/断开 since 1.6.3 -->
+                <action android:name="cn.jpush.android.intent.CONNECTION"/>
+                <category android:name="com.pointhouse.chiguan"/>
+            </intent-filter>
+        </receiver>
+
+
+        <!-- Required. For publish channel feature -->
+        <!-- JPUSH_CHANNEL 是为了方便开发者统计APK分发渠道。-->
+        <!-- 例如: -->
+        <!-- 发到 Google Play 的APK可以设置为 google-play; -->
+        <!-- 发到其他市场的 APK 可以设置为 xxx-market。 -->
+        <!-- 渠道统计报表位于控制台页面的 “统计”-“用户统计”-“渠道分布” 中-->
+        <!-- Required  . Enable it you can get statistics data with channel -->
+        <meta-data
+            android:name="JPUSH_CHANNEL"
+            android:value="developer-default"/>
+        <meta-data
+            android:name="JPUSH_APPKEY"
+            android:value="1191c2c739a904810e5b5a56"/> <!--  </>值来自开发者平台取得的AppKey-->
+
+        <!-- alipay sdk begin -->
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:exported="false"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+        </activity>
+        <activity
+            android:name="com.alipay.sdk.app.H5AuthActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+        </activity>
+        <!-- alipay sdk end -->
+
+        <!-- WXPay -->
+        <activity
+            android:name=".wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".k1_3.MediaActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            />
+
+        <!--购买页面-->
+        <activity
+            android:name=".w1_8.VIPPayActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="pointhouse"
+                    android:path="/w1_8"
+                    android:port="8888"
+                    android:scheme="chiguan"/>
+            </intent-filter>
+        </activity>
+
+
+        <activity
+            android:name=".k1_10.CourseAuditionActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:exported="true"
+            />
+
+        <activity
+            android:name=".k1_12.ExerciseListActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".k1_12.ExerciseActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".k1_13.ArticleActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".k1_13.AudioActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".s1_1.WalkmanCourseActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            />
+
+        <activity
+            android:name=".s1_2.WalkmanLessonActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            />
+
+        <activity
+            android:name=".h1.NotifyActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            />
+
+        <!-- ShareSDK的activity -->
+        <activity
+            android:name="com.mob.tools.MobUIShell"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden|adjustResize" >
+
+            <intent-filter>
+                <data android:scheme="tencent1106295006" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <!-- 调用新浪原生SDK，需要注册的回调activity -->
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </activity>
+
+        <!--云信配置-->
+        <meta-data
+            android:name="com.netease.nim.appKey"
+            android:value="c0843fd64306f4324f889697e531df14"/>
+        <!-- 声明网易云通信后台服务，如需保持后台推送，使用独立进程效果会更好。 -->
+        <service
+            android:name="com.netease.nimlib.service.NimService"
+            android:process=":core"/>
+        <!-- 运行后台辅助服务 -->
+        <service
+            android:name="com.netease.nimlib.service.NimService$Aux"
+            android:process=":core"/>
+        <!-- 声明云信后台辅助服务 -->
+        <service
+            android:name="com.netease.nimlib.job.NIMJobService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:process=":core"/>
+
+        <service
+            android:name=".Application.MediaService"
+            android:exported="true"
+            />
+
+        <service
+            android:name="com.pointhouse.chiguan.l1_1.MessageService"
+            android:enabled="true" />
+
+        <!--电话监听-->
+        <receiver android:name=".Application.PhoneReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE"/>
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+            </intent-filter>
+        </receiver>
+
+        <!--临时路径配置-->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.pointhouse.chiguan"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+
+        <!--通过浏览器Url启动app-->
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW"/>
+
+            <category android:name="android.intent.category.DEFAULT"/>
+            <category android:name="android.intent.category.BROWSABLE"/>
+
+            <data
+                android:host="lolita"
+                android:scheme="night"/>
+            <!--<a href="[scheme]://[host]/[path]?[query]">启动应用程序</a>-->
+        </intent-filter>
+    </application>
+</manifest>

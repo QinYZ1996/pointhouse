@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+        <RelativeLayout
+            android:id="@+id/editnickname_backbtn"
+            android:onClick="EditNickname_back"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="13dp">
+            <Button
+                android:onClick="EditNickname_back"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="14dp"
+                android:layout_width="10dp"
+                android:layout_height="18dp"
+                android:background="@mipmap/backblack"/>
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="修改昵称"
+            android:textSize="17dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColor="#000000"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2.5dp"
+        android:background="#f2f3f4"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="31dp"
+        android:layout_marginRight="31dp"
+        android:layout_marginTop="48dp"
+        android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editnickname_text"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="15dp"
+                android:textColor="#000000"
+                android:background="@null"
+                android:inputType="text"
+                android:paddingBottom="1dp"
+                android:paddingTop="1dp"/>
+
+        <Button
+            android:id="@+id/editnickname_savebtn"
+            android:onClick=""
+            android:layout_width="91dp"
+            android:layout_height="26.5dp"
+            android:layout_gravity="right"
+            android:layout_marginLeft="12dp"
+            android:background="@mipmap/xiugainichengbaocun"
+            android:text="保存"
+            android:textSize="15dp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#f2f3f4"
+        android:layout_marginLeft="31dp"
+        android:layout_marginRight="134dp"/>
+</LinearLayout>

@@ -1,0 +1,175 @@
+package com.pointhouse.chiguan.k1_9;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.pointhouse.chiguan.R;
+import com.pointhouse.chiguan.common.http.RequestBuilder;
+import com.pointhouse.chiguan.common.jsonObject.ArticleDetailGetBean;
+import com.pointhouse.chiguan.common.jsonObject.TestArticleDetailGetBean;
+import com.pointhouse.chiguan.common.mydialog.MyDialog;
+import com.pointhouse.chiguan.common.util.ToastUtil;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+/**
+ * Created by UPC on 2017/9/3.
+ */
+
+public class CommentItemAdapter extends BaseAdapter {
+
+    private LayoutInflater inflater;
+    private List<Comment> datalist;
+    private List<Comment> tmp;
+    private String articleId;
+
+    public CommentItemAdapter(Context context, String articleId) {
+        inflater = LayoutInflater.from(context);
+        datalist = new ArrayList<>();
+        tmp = new ArrayList<>();
+        this.articleId = articleId;
+    }
+
+    public void hideCommentList() {
+        int maxIndex = datalist.size() - 1;
+        for (int i = maxIndex; i >= 0; i--) {
+            tmp.add(datalist.remove(i));
+        }
+        notifyDataSetChanged();
+    }
+
+    public void showCommentList() {
+        int maxIndex = tmp.size() - 1;
+        for (int i = maxIndex; i >= 0; i--) {
+            datalist.add(tmp.remove(i));
+        }
+        notifyDataSetChanged();
+    }
+
+    public void addComment(Comment value) { // TODO 参数要改
+        datalist.add(value);
+    }
+
+    public void addNewComment(Comment value) {
+        if (datalist.size() > 0 && datalist.get(0).isEmpty()) {
+            datalist.remove(0);
+        }
+        datalist.add(0, value);
+    }
+
+    public void addEmptyView() {
+        Comment comment = new Comment();
+        comment.setEmpty(true);
+        datalist.add(comment);
+    }
+
+    @Override
+    public int getCount() {
+        return datalist.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return datalist.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        Comment data = datalist.get(position);
+        if (data.isEmpty()) {
+            if (convertView == null || convertView.getId() != R.id.header_item) {
+                convertView = inflater.inflate(R.layout.k1_9_item_empty, null, false);
+            }
+        } else {
+            CommentItemHolder holder;
+            if (convertView == null || convertView.getId() != R.id.comment_item) {
+                convertView = inflater.inflate(R.layout.k1_9_item_comment, null, false);
+                holder = new CommentItemHolder();
+                holder.authorIcon = (CircleImageView) convertView.findViewById(R.id.author_icon);
+                holder.authorName = (TextView) convertView.findViewById(R.id.author_name);
+                holder.comment = (TextView) convertView.findViewById(R.id.comment);
+                holder.delComment = convertView.findViewById(R.id.delete_comment);
+                holder.line = convertView.findViewById(R.id.v_line);
+                convertView.setTag(holder);
+            } else {
+                holder = (CommentItemHolder) convertView.getTag();
+            }
+
+            if (position == datalist.size() - 1) {
+                holder.line.setVisibility(View.GONE);
+            } else {
+                holder.line.setVisibility(View.VISIBLE);
+            }
+
+            Picasso.with(convertView.getContext()).load(data.getAuthorIconUrl()).placeholder(R.drawable.icon1_default).into(holder.authorIcon);
+            holder.authorName.setText(data.getAuthorName());
+            holder.comment.setText(data.getComment());
+            if (data.isDeletable()) {
+                holder.delComment.setVisibility(View.VISIBLE);
+                holder.delComment.setOnClickListener(v -> {
+                    View view = inflater.inflate(R.layout.common_dialog, null);
+                    final TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle);
+                    tvTitle.setText("确认删除评论？");
+                    final TextView btnYes = (TextView) view.findViewById(R.id.f_quchecbutton_btn_queding);
+                    final TextView btlNo = (TextView) view.findViewById(R.id.f_quchecbutton_btn_quxiao);
+                    final MyDialog dialog = new MyDialog(v.getContext(), 0, 0, view, R.style.DialogTheme);
+
+                    dialog.setCancelable(false);
+                    dialog.show();
+                    //设置对话框显示的View
+                    //点击确定是的监听
+                    btnYes.setOnClickListener(v1 -> {
+                        dialog.cancel();
+                        // TODO 方法名和参数 删除api
+                        new RequestBuilder<>(JSONObject.class).getRequest("favoriteDel", new String[]{"1", "1"}, v.getContext(), jsonObject -> {
+                            new RequestBuilder<>(ArticleDetailGetBean.class).getRequest("articleDetail", new String[]{articleId}, v.getContext(), bean -> {
+                                bean = JSON.parseObject(TestArticleDetailGetBean.jsonNormal, ArticleDetailGetBean.class); // for test
+                                Comment.loadListData(this, bean.getResultObject());
+                                if (datalist.size() == 0) {
+                                    addEmptyView();
+                                }
+                                notifyDataSetChanged();
+                            }, throwable -> {
+                                datalist.remove(position);
+                                if (datalist.size() == 0) {
+                                    addEmptyView();
+                                }
+                                notifyDataSetChanged();
+                            });
+                            ToastUtil.getToast(v.getContext(), "评论已删除", "center", 0, 180).show();
+                        }, throwable -> {
+                            ToastUtil.getToast(v.getContext(), "删除失败，请检查网络", "center", 0, 180).show();
+                        });
+                    });
+
+                    btlNo.setOnClickListener(v12 -> dialog.cancel());
+                });
+            } else {
+                holder.delComment.setVisibility(View.GONE);
+            }
+        }
+
+        return convertView;
+    }
+
+    private class CommentItemHolder {
+        View delComment, line;
+        TextView authorName, comment;
+        CircleImageView authorIcon;
+    }
+}

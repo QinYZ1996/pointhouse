@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#f3f5f6">
+
+    <RelativeLayout
+        android:id="@+id/viewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="55dp">
+
+        <ImageView
+            android:id="@+id/imgPoPRepeat"
+            android:layout_width="22.5dp"
+            android:layout_height="18.5dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/media_pop_30"
+            android:layout_marginStart="@dimen/media_pop_30"
+            android:contentDescription="@string/media_repeat"
+            android:src="@mipmap/bofangliebiaoxunhuan" />
+
+        <TextView
+            android:id="@+id/txtPoPRepeat"
+            style="@style/media_pop_text"
+            android:layout_marginLeft="@dimen/media_pop_30"
+            android:layout_marginStart="@dimen/media_pop_30"
+            android:layout_toEndOf="@id/imgPoPRepeat"
+            android:layout_toRightOf="@id/imgPoPRepeat"
+            android:text="@string/media_repeat_seq"
+            android:textSize="14.0dp" />
+
+        <ImageView
+            android:id="@+id/imgPoPSort"
+            android:layout_width="14dp"
+            android:layout_height="16dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/media_pop_30"
+            android:layout_marginRight="@dimen/media_pop_30"
+            android:contentDescription="@string/media_sort"
+            android:src="@mipmap/shunpaixun"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/txtPoPSort"
+            style="@style/media_pop_text"
+            android:layout_marginEnd="@dimen/media_pop_30"
+            android:layout_marginRight="@dimen/media_pop_30"
+            android:layout_toLeftOf="@id/imgPoPSort"
+            android:layout_toStartOf="@id/imgPoPSort"
+            android:text="@string/media_sort"
+            android:textSize="15.0dp"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/viewList"
+        android:layout_width="match_parent"
+        android:layout_height="360dp"
+        android:layout_below="@id/viewTitle"
+        android:background="@drawable/border_top">
+
+        <com.pointhouse.chiguan.common.updatecommon.PullToRefreshListView
+            android:id="@+id/courseList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/viewBottom"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:layout_below="@id/viewList"
+        android:background="@drawable/border_top"
+        android:gravity="center">
+
+        <TextView
+            style="@style/media_pop_text"
+            android:text="@string/media_close"
+            android:textSize="16.0dp"
+            android:textStyle="bold"
+
+            />
+    </RelativeLayout>
+
+
+</RelativeLayout>

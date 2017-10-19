@@ -1,0 +1,145 @@
+package com.pointhouse.chiguan.db;
+
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+/**
+ * Created by ljj on 2017/8/15.
+ */
+@DatabaseTable
+public class PayInfo {
+    @DatabaseField(generatedId=true)
+    private Integer id;
+    @DatabaseField(unique = true)
+    private Integer courseId;
+
+    @DatabaseField()
+    private boolean isBuy;
+
+    @DatabaseField()
+    private boolean isPrompt;
+
+    @DatabaseField()
+    private Integer isCourse;
+
+    @DatabaseField()
+    private String tid;
+
+    public String getTid() {
+        return tid;
+    }
+
+    public void setTid(String tid) {
+        this.tid = tid;
+    }
+
+    public Integer getIsCourse() {
+        return isCourse;
+    }
+
+    public void setIsCourse(Integer isCourse) {
+        this.isCourse = isCourse;
+    }
+
+    public boolean getIsPrompt() {
+        return isPrompt;
+    }
+
+    public void setIsPrompt(boolean isPrompt) {
+        this.isPrompt = isPrompt;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
+    }
+
+    public boolean getIsBuy() {
+        return isBuy;
+    }
+
+    public void setIsBuy(boolean isBuy) {
+        this.isBuy = isBuy;
+    }
+
+
+    /**
+     * DFF
+     */
+    @DatabaseField()
+    private Integer integerDFF1;
+
+    public Integer getIntegerDFF1() {
+        return integerDFF1;
+    }
+
+    public void setIntegerDFF1(Integer integerDFF1) {
+        this.integerDFF1 = integerDFF1;
+    }
+
+    @DatabaseField()
+    private Integer integerDFF2;
+
+    public Integer getIntegerDFF2() {
+        return integerDFF2;
+    }
+
+    public void setIntegerDFF2(Integer integerDFF2) {
+        this.integerDFF2 = integerDFF2;
+    }
+
+    @DatabaseField()
+    private Integer integerDFF3;
+
+    public Integer getIntegerDFF3() {
+        return integerDFF3;
+    }
+
+    public void setIntegerDFF3(Integer integerDFF3) {
+        this.integerDFF3 = integerDFF3;
+    }
+
+    @DatabaseField()
+    private String stringDFF1;
+
+    public String getStringDFF1() {
+        return stringDFF1;
+    }
+
+    public void setStringDFF1(String stringDFF1) {
+        this.stringDFF1 = stringDFF1;
+    }
+
+    @DatabaseField()
+    private String stringDFF2;
+
+    public String getStringDFF2() {
+        return stringDFF2;
+    }
+
+    public void setStringDFF2(String stringDFF2) {
+        this.stringDFF2 = stringDFF2;
+    }
+
+    @DatabaseField()
+    private String stringDFF3;
+
+    public String getStringDFF3() {
+        return stringDFF3;
+    }
+
+    public void setStringDFF3(String stringDFF3) {
+        this.stringDFF3 = stringDFF3;
+    }
+}

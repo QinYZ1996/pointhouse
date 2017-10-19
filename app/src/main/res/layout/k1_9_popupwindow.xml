@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="#fff"
+              android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:text="评论"
+        android:textColor="#3c5fc5"
+        android:textSize="14dp"/>
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="3dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:scaleType="fitXY"
+        android:src="@mipmap/lantiao"/>
+
+    <EditText
+        android:id="@+id/et_comment"
+        android:layout_width="match_parent"
+        android:layout_height="95dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginRight="9dp"
+        android:layout_marginTop="10dp"
+        android:background="#f7f7f7"
+        android:gravity="top"
+        android:hint="请在这里输入评论哦～"
+        android:inputType="textMultiLine"
+        android:maxLength="300"
+        android:padding="5dp"
+        android:textColor="#a4a4a4"
+        android:textColorHint="#a4a4a4"
+        android:textSize="13dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginRight="9dp"
+        android:background="#f7f7f7">
+
+        <TextView
+            android:id="@+id/text_num_total"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp"
+            android:text="/300"
+            android:textColor="#a4a4a4"
+            android:textSize="12dp"/>
+
+        <TextView
+            android:id="@+id/text_num_current"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="3dp"
+            android:layout_toLeftOf="@id/text_num_total"
+            android:text="0"
+            android:textColor="#a4a4a4"
+            android:textSize="12dp"/>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_add_comment"
+        android:layout_width="73dp"
+        android:layout_height="29dp"
+        android:layout_gravity="end"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="9dp"
+        android:layout_marginTop="13dp"
+        android:background="@mipmap/fabiaopinglun"
+        android:text="发表评论"
+        android:textColor="#fff"
+        android:textSize="13dp"/>
+</LinearLayout>

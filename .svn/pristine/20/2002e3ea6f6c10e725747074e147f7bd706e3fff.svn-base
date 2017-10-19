@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <!--    <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:elevation="0dp">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:padding="0dp"
+                android:layout_margin="0dp"
+                app:titleTextAppearance="@style/Toolbar.TitleText">
+
+                <include layout="@layout/nim_action_bar_right_clickable_tv" android:visibility="gone"/>
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>-->
+
+    <ScrollView
+        style="@style/scroll_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/color_background"
+        android:fillViewport="true"
+        android:scrollbarStyle="outsideOverlay">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="175dp"
+                >
+                <ImageView
+                    android:id="@+id/imgBackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/mine_background"
+                    />
+                <ImageView
+                    android:id="@+id/imgBack"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="120dp"
+                    android:scaleType="center"
+                    android:src="@drawable/backwhite" />
+
+                <TextView
+                    android:id="@+id/txtTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="120dp"
+                    android:layout_toEndOf="@id/imgBack"
+                    android:layout_toRightOf="@id/imgBack"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="17.0dp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+            <include
+                android:id="@+id/team_create_layout"
+                layout="@layout/nim_advanced_team_info_divider_item" />
+
+            <include
+                android:id="@+id/team_mime_layout"
+                layout="@layout/nim_advanced_team_info_divider_item" />
+
+            <include
+                android:id="@+id/team_memeber_layout"
+                layout="@layout/nim_advanced_team_info_divider_item"
+                android:visibility="gone"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="71dp"
+                android:layout_gravity="center_vertical"
+                android:paddingRight="15dp"
+                android:background="@color/white">
+                <TextView
+                    android:id="@+id/member_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:drawablePadding="5dp"
+                    android:drawableRight="@drawable/nim_arrow_right"
+                    android:ellipsize="end"
+                    android:layout_centerInParent="true"
+                    android:gravity="right|center_vertical"
+                    android:hint="@string/click_set"
+                    android:singleLine="true"
+                    android:textColor="@color/color_grey_999999"
+                    android:textColorHint="@color/color_grey_999999"
+                    android:textSize="@dimen/text_size_15" />
+                <com.netease.nim.uikit.team.ui.TeamInfoGridView
+                    android:id="@+id/team_member_grid_view"
+                    style="@style/grid_view"
+                    android:layout_toLeftOf="@id/member_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center"
+                    android:numColumns="4"
+                    android:padding="12dp"
+                    android:verticalSpacing="16dip" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/team_name_layout"
+                    layout="@layout/nim_advanced_team_info_divider_item"
+                    android:visibility="gone" />
+
+                <include
+                    android:id="@+id/team_introduce_layout"
+                    layout="@layout/nim_advanced_team_info_divider_item_new" />
+
+                <include
+                    android:id="@+id/team_announcement_layout"
+                    layout="@layout/nim_advanced_team_info_divider_item_new" />
+
+                <include
+                    android:id="@+id/team_extension_layout"
+                    layout="@layout/nim_advanced_team_info_divider_item"
+                    android:visibility="gone" />
+
+                <include
+                    android:id="@+id/team_notification_config_layout"
+                    layout="@layout/nim_advanced_team_info_divider_item" />
+            </LinearLayout>
+
+
+            <include
+                android:id="@+id/team_authentication_layout"
+                layout="@layout/nim_advanced_team_info_divider_item" />
+
+            <include
+                android:id="@+id/team_invite_layout"
+                layout="@layout/nim_advanced_team_info_divider_item" />
+
+            <include
+                android:id="@+id/team_info_update_layout"
+                layout="@layout/nim_advanced_team_info_divider_item" />
+
+            <include
+                android:id="@+id/team_invitee_authen_layout"
+                layout="@layout/nim_advanced_team_info_divider_item" />
+
+            <TextView
+                android:id="@+id/txtQuitTeam"
+                android:layout_width="304.5dp"
+                android:layout_height="38dp"
+                android:layout_gravity="center"
+                android:background="@drawable/quit_team_background"
+                android:gravity="center"
+                android:text="@string/quit_team_me"
+                android:textColor="@color/white"
+                android:textSize="17.0dp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

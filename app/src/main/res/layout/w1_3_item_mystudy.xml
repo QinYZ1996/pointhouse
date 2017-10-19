@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="98dp"
+              android:background="@color/white"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="20dp">
+
+        <ImageView
+            android:id="@+id/iv_headIamge"
+            android:layout_width="60.5dp"
+            android:layout_height="60.5dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon1_default"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60.5dp"
+            android:layout_alignTop="@id/iv_headIamge"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/iv_headIamge">
+
+            <TextView
+                android:id="@+id/tv_courseTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:ellipsize="end"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:textColor="#111111"
+                android:textSize="17dp"/>
+
+            <TextView
+                android:id="@+id/tv_lessonTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_courseTitle"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#969696"
+                android:textSize="12dp"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@id/tv_lessonTitle"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="5dp"
+                android:gravity="bottom"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/layout_border">
+
+                    <ProgressBar
+                        android:id="@+id/pb_process"
+                        style="@style/StyleProgressBarMini"
+                        android:layout_width="76dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:max="100"
+                        android:progress="20"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_process"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:text="45%"
+                    android:textColor="#969696"
+                    android:textSize="12dp"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/mydate_div"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="83.5dp"
+        android:layout_marginTop="15dp"
+        android:background="#f2f3f4"/>
+</LinearLayout>

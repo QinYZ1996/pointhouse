@@ -1,0 +1,765 @@
+package com.pointhouse.chiguan.k1_9;
+
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.graphics.Rect;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.pointhouse.chiguan.Application.CommonMedia;
+import com.pointhouse.chiguan.Application.GlobalApplication;
+import com.pointhouse.chiguan.Application.MediaService;
+import com.pointhouse.chiguan.R;
+import com.pointhouse.chiguan.common.base.MediaBaseActivity;
+import com.pointhouse.chiguan.common.http.RequestBuilder;
+import com.pointhouse.chiguan.common.jsonObject.ArticleDetailGetBean;
+import com.pointhouse.chiguan.common.jsonObject.LessonDetailGetBean;
+import com.pointhouse.chiguan.common.jsonObject.TestArticleDetailGetBean;
+import com.pointhouse.chiguan.common.util.CommonMediaOption;
+import com.pointhouse.chiguan.common.util.IntentUriUtil;
+import com.pointhouse.chiguan.common.util.MediaServiceHelper;
+import com.pointhouse.chiguan.common.util.SharedPreferencesUtil;
+import com.pointhouse.chiguan.common.util.ToastUtil;
+import com.pointhouse.chiguan.common.util.ToolUtil;
+import com.pointhouse.chiguan.k1_14.ShareListActivity;
+import com.pointhouse.chiguan.k1_3.Course;
+import com.pointhouse.chiguan.k1_3.Lesson;
+import com.pointhouse.chiguan.k1_3.Media;
+import com.pointhouse.chiguan.k1_4.PayActivity;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.onekeyshare.OnekeyShare;
+import de.hdodenhof.circleimageview.CircleImageView;
+
+/**
+ * Created by P on 2017/8/30.
+ */
+
+public class ShareArticleActivity extends MediaBaseActivity implements View.OnLayoutChangeListener {
+
+    private static final String TAG = "k1-9";
+    private static final String CURRENCY = "¥";
+    private static final String COLLECTION_TYPE = "2";
+    private static final int SOFT_INPUT_SHOW_DELAY = 100; // ms
+
+    private CommonMedia commonMedia;
+    private View main, contentView, mediaView, purchaseHintView, collection, purchase, addComment, popView, titleBar, back, share, headerView, commentDivider, viewLoading, viewOperate, articleView, viewSVContainer, giv;
+    private ImageView imgShare, imgShareFull, imgExerciseClose, imgRepeat;
+    private CircleImageView teacherIcon;
+    private TextView teacherName, releaseDate, price, collectionLabel, category, viewLoadingText, articleTitle, more;
+    private EditText etComment;
+    private WebView article;
+    private ListView listView;
+    private CommentItemAdapter adapter;
+    private PopupWindow popupWindow;
+    private String tmpComment;
+
+    private boolean isPaid;
+    private boolean isReload;
+    private boolean isFavorite;
+    private boolean isChangeShareBtn;
+    private String articleId;
+
+    private void bindView() {
+        // 主画面部分
+        main = findViewById(R.id.main);
+        purchase = findViewById(R.id.purchase);
+        listView = (ListView) findViewById(R.id.comment_list);
+        // listView部分
+        headerView = LayoutInflater.from(this).inflate(R.layout.k1_9_item_header, null, false);
+        listView.addHeaderView(headerView);
+        adapter = new CommentItemAdapter(this, articleId);
+        listView.setAdapter(adapter);
+        // headerView部分
+        contentView = headerView.findViewById(R.id.content_layout);
+        mediaView = headerView.findViewById(R.id.commonMedia);
+        viewLoading = headerView.findViewById(R.id.viewLoading);
+        viewOperate = headerView.findViewById(R.id.viewOperate);
+        viewSVContainer = headerView.findViewById(R.id.viewSVContainer);
+        giv = headerView.findViewById(R.id.imgMusic);
+        viewLoadingText = (TextView) findViewById(R.id.viewLoadingText);
+        imgShare = (ImageView) headerView.findViewById(R.id.imgShare);
+        imgShareFull = (ImageView) headerView.findViewById(R.id.imgShareFull);
+        imgRepeat = (ImageView) headerView.findViewById(R.id.imgRepeat);
+        imgExerciseClose = (ImageView) headerView.findViewById(R.id.imgExerciseClose);
+        teacherIcon = (CircleImageView) headerView.findViewById(R.id.teacher_icon);
+        teacherName = (TextView) headerView.findViewById(R.id.teacher_name);
+        releaseDate = (TextView) headerView.findViewById(R.id.release_date);
+        price = (TextView) headerView.findViewById(R.id.price);
+        collection = headerView.findViewById(R.id.collection);
+        collectionLabel = (TextView) headerView.findViewById(R.id.collection_label);
+        category = (TextView) headerView.findViewById(R.id.category);
+        articleView = headerView.findViewById(R.id.article_layout);
+        article = (WebView) headerView.findViewById(R.id.article);
+        more = (TextView) headerView.findViewById(R.id.more);
+        articleTitle = (TextView) headerView.findViewById(R.id.article_title);
+        purchaseHintView = headerView.findViewById(R.id.purchase_hint);
+        addComment = headerView.findViewById(R.id.add_comment_layout);
+        titleBar = headerView.findViewById(R.id.title_bar);
+        back = headerView.findViewById(R.id.sharearticle_back);
+        share = headerView.findViewById(R.id.share);
+        commentDivider = headerView.findViewById(R.id.comment_divider);
+        // popupwindow
+        popView = LayoutInflater.from(this).inflate(R.layout.k1_9_popupwindow, null, false);
+        popupWindow = new PopupWindow(popView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setFocusable(true);
+        etComment = (EditText) popView.findViewById(R.id.et_comment);
+
+        mediaView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.k1_9_activity_sharearticle);
+        articleId = getIntent().getStringExtra("articleId");
+        bindView();
+        initView();
+    }
+
+    private void initView() {
+//        new RequestBuilder<>(ArticleDetailGetBean.class).getRequest("articleDetail", new String[]{articleId}, TAG, this, bean -> {
+        new RequestBuilder<>(LessonDetailGetBean.class).getRequest("lessonDetail", new String[]{"1"}, TAG, this, test -> { // for test
+            ArticleDetailGetBean bean = JSON.parseObject(TestArticleDetailGetBean.jsonNormal, ArticleDetailGetBean.class); // for test
+            ArticleDetailGetBean.ResultObjectBean rob = bean.getResultObject();
+            ArticleDetailGetBean.ResultObjectBean.ArticleBean ab = rob.getArticle();
+            // 共通设定
+            Picasso.with(this).load(ab.getAuthorAvatar()).placeholder(R.drawable.icon1_default).into(teacherIcon);
+            teacherName.setText(ab.getAuthor());
+            releaseDate.setText(ab.getCreateDate());
+//            try {
+//                SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+//                Date date = sdf.parse(ab.getCreateDate());
+//                sdf.applyPattern("yyyy.M.d");
+//                releaseDate.setText(sdf.format(date));
+//            } catch (ParseException e) {
+//                releaseDate.setText(ab.getCreateDate());
+//                e.printStackTrace();
+//            }
+            category.setText(ab.getCategoryTitle());
+            isFavorite = rob.getIsFavorite() == 1;
+
+            setViewByCondition(rob);
+            bindEvent(rob);
+        });
+    }
+
+    private void setViewByCondition(ArticleDetailGetBean.ResultObjectBean rob) {
+        ArticleDetailGetBean.ResultObjectBean.ArticleBean ab = rob.getArticle();
+        int type = ab.getType();
+        // 价格
+        switch (type) {
+            case 0:
+                price.setText("免费");
+                break;
+            case 1:
+                price.setText(CURRENCY + ToolUtil.doubleToString(ab.getPrice()));
+                break;
+            case 2:
+                price.setText(CURRENCY + ToolUtil.doubleToString(ab.getPrice()) + " (会员免费)");
+                break;
+        }
+        // 收藏已收藏表示
+        if (isFavorite) {
+            collectionLabel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+            collectionLabel.setText("已收藏");
+            collection.setBackgroundResource(R.mipmap.yishoucang);
+        } else {
+            collectionLabel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
+            collectionLabel.setText("收藏");
+            collection.setBackgroundResource(R.mipmap.shoucang);
+        }
+        // 购买提示、购买表示，文章表示
+        if (type == 0) { // 免费
+            isPaid = true;
+            purchase.setVisibility(View.GONE);
+            purchaseHintView.setVisibility(View.GONE);
+            commentDivider.setVisibility(View.VISIBLE);
+            setViewByArticleType(rob);
+            Comment.loadListData(adapter, rob);
+        } else if (isLogin()) { // 收费，已登录
+            if (rob.getIsPaid() == 1) { // 已支付
+                isPaid = true;
+                purchase.setVisibility(View.GONE);
+                purchaseHintView.setVisibility(View.GONE);
+                commentDivider.setVisibility(View.VISIBLE);
+                setViewByArticleType(rob);
+                Comment.loadListData(adapter, rob);
+            } else if (GlobalApplication.user.getVip() == 1 && type == 2) { // 文章类型：会员免费
+                isPaid = true;
+                purchase.setVisibility(View.GONE);
+                purchaseHintView.setVisibility(View.GONE);
+                commentDivider.setVisibility(View.VISIBLE);
+                setViewByArticleType(rob);
+                Comment.loadListData(adapter, rob);
+            } else { // 未支付
+                isPaid = false;
+                purchase.setVisibility(View.VISIBLE);
+                purchaseHintView.setVisibility(View.VISIBLE);
+                commentDivider.setVisibility(View.GONE);
+                setViewByArticleType(rob);
+            }
+        } else { // 收费，未登录
+            isPaid = false;
+            purchase.setVisibility(View.VISIBLE);
+            purchaseHintView.setVisibility(View.VISIBLE);
+            commentDivider.setVisibility(View.GONE);
+            setViewByArticleType(rob);
+        }
+    }
+
+    private void setViewByArticleType(ArticleDetailGetBean.ResultObjectBean rob) {
+//        switch (rob.getArticle().getContentType()) {
+//
+//        }
+        ArticleDetailGetBean.ResultObjectBean.ArticleBean ab = rob.getArticle();
+        if (false) { // TODO 视频
+            articleView.setVisibility(View.GONE);
+            purchaseHintView.setVisibility(View.GONE);
+            commentDivider.setVisibility(View.VISIBLE);
+            titleBar.setVisibility(View.GONE);
+            mediaView.setVisibility(View.VISIBLE);
+            commonMedia = new CommonMedia(this, getOption(2, rob));
+            commonMedia.setOnAllCompleteListener(() -> {
+                if (ab.getType() == 0) {
+                    imgShare.setVisibility(View.VISIBLE);
+                    imgShare.setOnClickListener(v -> {
+                        showShare(rob);
+                    });
+                    isChangeShareBtn = false;
+                }
+                if (isPaid) {
+                    commonMedia.prepareAsync();
+                } else {
+                    giv.setOnClickListener(null);
+                    viewSVContainer.setOnClickListener(null);
+                    viewOperate.setOnClickListener(null);
+                    viewOperate.setVisibility(View.INVISIBLE);
+                    viewLoading.setVisibility(View.VISIBLE);
+                    viewLoadingText.setText("请您购买后视听");
+                    imgRepeat.setOnClickListener(null);
+//                    imgExerciseClose.setVisibility(View.VISIBLE);
+//                    imgExerciseClose.setImageResource(R.mipmap.fenxiang);
+//                    imgExerciseClose.setOnClickListener(v -> {
+//                        showShare(rob);
+//                    });
+                    try {
+                        MediaServiceHelper.getService(this, MediaService::hardClose);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else if (false) { // TODO 音频+文章
+            titleBar.setVisibility(View.GONE);
+            mediaView.setVisibility(View.VISIBLE);
+            articleTitle.setText(ab.getTitle());
+            article.getSettings().setDefaultTextEncodingName("UTF-8");
+            commonMedia = new CommonMedia(this, getOption(1, rob));
+            commonMedia.setOnAllCompleteListener(() -> {
+                if (ab.getType() == 0) {
+                    imgShare.setVisibility(View.VISIBLE);
+                    imgShare.setOnClickListener(v -> {
+                        MediaServiceHelper.getService(this, MediaService::backGroundHide);//隐藏
+                        showShare(rob);
+                    });
+                    imgShareFull.setOnClickListener(v -> {
+                        MediaServiceHelper.getService(this, MediaService::backGroundHide);//隐藏
+                        showShare(rob);
+                    });
+                    isChangeShareBtn = true;
+                }
+                if (isPaid) {
+                    commonMedia.prepareAsync();
+                } else {
+                    giv.setOnClickListener(null);
+                    viewSVContainer.setOnClickListener(null);
+                    viewOperate.setOnClickListener(null);
+                    viewOperate.setVisibility(View.INVISIBLE);
+                    viewLoading.setVisibility(View.VISIBLE);
+                    viewLoadingText.setText("请您购买后视听");
+                    imgRepeat.setOnClickListener(null);
+//                    imgExerciseClose.setVisibility(View.VISIBLE);
+//                    imgExerciseClose.setImageResource(R.mipmap.fenxiang);
+//                    imgExerciseClose.setOnClickListener(v -> {
+//                        showShare(rob);
+//                    });
+                    try {
+                        MediaServiceHelper.getService(this, MediaService::hardClose);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            String content = rob.getArticle().getContent() == null ? "" : rob.getArticle().getContent();
+            if (isPaid) {
+                article.loadData(content.replace("<img", "<img style=\"width:100%;\""), "text/html; charset=UTF-8", null); // TODO
+            } else {
+                more.setVisibility(View.VISIBLE);
+                article.loadData(content.replace("<img", "<img style=\"width:100%;\""), "text/html; charset=UTF-8", null); // TODO
+            }
+        } else if (false) { // TODO 视频+文章
+            titleBar.setVisibility(View.GONE);
+            mediaView.setVisibility(View.VISIBLE);
+            articleTitle.setText(ab.getTitle());
+            article.getSettings().setDefaultTextEncodingName("UTF-8");
+            commonMedia = new CommonMedia(this, getOption(2, rob));
+            commonMedia.setOnAllCompleteListener(() -> {
+                if (ab.getType() == 0) {
+                    imgShare.setVisibility(View.VISIBLE);
+                    imgShare.setOnClickListener(v -> {
+                        showShare(rob);
+                    });
+                    isChangeShareBtn = false;
+                }
+                if (isPaid) {
+                    commonMedia.prepareAsync();
+                } else {
+                    giv.setOnClickListener(null);
+                    viewSVContainer.setOnClickListener(null);
+                    viewOperate.setOnClickListener(null);
+                    viewOperate.setVisibility(View.INVISIBLE);
+                    viewLoading.setVisibility(View.VISIBLE);
+                    viewLoadingText.setText("请您购买后视听");
+                    imgRepeat.setOnClickListener(null);
+//                    imgExerciseClose.setVisibility(View.VISIBLE);
+//                    imgExerciseClose.setImageResource(R.mipmap.fenxiang);
+//                    imgExerciseClose.setOnClickListener(v -> {
+//                        showShare(rob);
+//                    });
+                    try {
+                        MediaServiceHelper.getService(this, MediaService::hardClose);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            String content = rob.getArticle().getContent() == null ? "" : rob.getArticle().getContent();
+            if (isPaid) {
+                article.loadData(content.replace("<img", "<img style=\"width:100%;\""), "text/html; charset=UTF-8", null); // TODO
+            } else {
+                more.setVisibility(View.VISIBLE);
+                article.loadData(content.replace("<img", "<img style=\"width:100%;\""), "text/html; charset=UTF-8", null); // TODO
+            }
+        } else { // 文章
+            titleBar.setVisibility(View.VISIBLE);
+            if (ab.getType() == 0) {
+                share.setVisibility(View.VISIBLE);
+            }
+            mediaView.setVisibility(View.GONE);
+            articleTitle.setText(ab.getTitle());
+            article.getSettings().setDefaultTextEncodingName("UTF-8");
+            String content = rob.getArticle().getContent() == null ? "" : rob.getArticle().getContent();
+            if (isPaid) {
+                article.loadData(content.replace("<img", "<img style=\"width:100%;\""), "text/html; charset=UTF-8", null); // TODO
+            } else {
+                more.setVisibility(View.VISIBLE);
+                article.loadData(content.replace("<img", "<img style=\"width:100%;\""), "text/html; charset=UTF-8", null); // TODO
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isReload) {
+            isReload = false;
+            initView();
+        }
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            MediaServiceHelper.getService(this, MediaService::backGroundHide);
+        }
+    }
+
+    private void bindEvent(ArticleDetailGetBean.ResultObjectBean rob) {
+        ArticleDetailGetBean.ResultObjectBean.ArticleBean ab = rob.getArticle();
+        back.setOnClickListener(v -> finish());
+        // 文章分享
+        share.setOnClickListener(v -> {
+            showShare(rob);
+        });
+        category.setOnClickListener(v -> {
+            // TODO
+            Intent intent = new Intent(this, ShareListActivity.class);
+            startActivity(intent);
+        });
+        purchase.setOnClickListener(v -> {
+            if (!validateLogin()) {
+                return;
+            }
+            Intent intent = new Intent(v.getContext(), PayActivity.class);
+            intent.putExtra("type", 2);
+            intent.putExtra("courseId", ab.getId());
+            intent.putExtra("courseName", ab.getTitle());
+            intent.putExtra("price", ab.getPrice());
+            v.getContext().startActivity(intent);
+            isReload = true;
+        });
+
+        collection.setOnClickListener(v -> {
+            if (!validateLogin()) {
+                return;
+            }
+
+            if (!isFavorite) { // 收藏
+                // 传入的bean类需要有无参构造方法
+                new RequestBuilder<>(JSONObject.class).getRequest("favorite", new String[]{COLLECTION_TYPE, String.valueOf(ab.getId())}, TAG, this, jsonObject -> {
+                    collectionLabel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+                    collectionLabel.setText("已收藏");
+                    collection.setBackgroundResource(R.mipmap.yishoucang);
+                    ToastUtil.getToast(getApplicationContext(), "收藏成功", "center", 0, 180).show();
+                    isFavorite = true;
+                });
+            } else { // 取消收藏
+                new RequestBuilder<>(JSONObject.class).getRequest("favoriteDel", new String[]{COLLECTION_TYPE, String.valueOf(ab.getId())}, TAG, this, jsonObject -> {
+                    collectionLabel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
+                    collectionLabel.setText("收藏");
+                    collection.setBackgroundResource(R.mipmap.shoucang);
+                    ToastUtil.getToast(getApplicationContext(), "取消收藏成功", "center", 0, 180).show();
+                    isFavorite = false;
+                });
+            }
+        });
+
+        addComment.setOnClickListener(v -> {
+            if (!validateLogin()) return;
+            if (!isPaid) {
+                ToastUtil.getToast(getApplicationContext(), "请您购买后评论", "center", 0, 180).show();
+                return;
+            }
+
+            showPopupWindow(rob);
+        });
+    }
+
+    private boolean validateLogin() {
+        if (!isLogin()) {
+            startActivity(IntentUriUtil.getIntent("l1", "k1_9," + articleId));
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isLogin() {
+        return SharedPreferencesUtil.readToken(this) != null && !SharedPreferencesUtil.readToken(this).equals("");
+    }
+
+    /**
+     * 软键盘是否弹出
+     *
+     * @return
+     */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private boolean isSoftInputShowing() {
+        // 当前屏幕总高度
+        int totalHeight = getWindow().getDecorView().getHeight();
+        // 可见区域高度
+        Rect rect = new Rect();
+        getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
+        int visibleHeight = rect.bottom;
+        // 部分手机下部的虚拟键盘bar高度
+        int virtualBtnBarHeight = getSoftButtonBarHeight();
+
+        return totalHeight - visibleHeight - virtualBtnBarHeight > 0;
+    }
+
+    /**
+     * 底部虚拟按键栏高度
+     *
+     * @return
+     */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private int getSoftButtonBarHeight() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        // 非屏幕真实高度
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int usableHeight = metrics.heightPixels;
+        // 屏幕真实高度
+        getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
+        int realHeight = metrics.heightPixels;
+        if (realHeight > usableHeight) {
+            return realHeight - usableHeight;
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+        if (Build.VERSION.SDK_INT >= 17) {
+            if (!isSoftInputShowing()) {
+                if (popupWindow != null) {
+                    popupWindow.dismiss();
+                }
+            }
+        }
+    }
+
+    private void showPopupWindow(ArticleDetailGetBean.ResultObjectBean rob) {
+        etComment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                tmpComment = s.toString();
+            }
+        });
+        // 追加评论
+        popView.findViewById(R.id.btn_add_comment).setOnClickListener(v -> {
+            String commentText = etComment.getText().toString();
+            if ("".equals(commentText.trim())) {
+                ToastUtil.getToast(v.getContext(), "评论不能为空", "center", 0, 180).show();
+                return;
+            }
+
+//            new RequestBuilder<>(JSONObject.class).getRequest("comment", new String[]{articleId, "1", commentText}, TAG, this, jsonObject -> {
+//                new RequestBuilder<>(ArticleDetailGetBean.class).getRequest("articleDetail", new String[]{articleId}, TAG, this, bean -> {
+            new RequestBuilder<>(LessonDetailGetBean.class).getRequest("lessonDetail", new String[]{"1"}, TAG, this, jsonObject -> { //for test
+                new RequestBuilder<>(LessonDetailGetBean.class).getRequest("lessonDetail", new String[]{"1"}, TAG, this, test -> { //for test
+                    ArticleDetailGetBean bean = JSON.parseObject(TestArticleDetailGetBean.jsonNormal, ArticleDetailGetBean.class); // for test
+                    Comment.loadListData(adapter, bean.getResultObject());
+                    adapter.notifyDataSetChanged();
+                }, throwable -> {
+                    ArticleDetailGetBean.ResultObjectBean.ArticleBean ab = rob.getArticle();
+                    Comment comment = new Comment();
+                    comment.setAuthorIconUrl(ab.getAuthorAvatar());
+                    comment.setAuthorName(ab.getAuthor());
+                    comment.setDeletable(true);
+                    comment.setComment(etComment.getText().toString());
+                    adapter.addNewComment(comment);
+                    adapter.notifyDataSetChanged();
+                });
+
+                ToastUtil.getToast(v.getContext(), "评论已追加", "center", 0, 180).show();
+                popupWindow.dismiss();
+                tmpComment = null;
+            }, throwable -> {
+                ToastUtil.getToast(v.getContext(), "追加失败，请检查网络", "center", 0, 180).show();
+            });
+        });
+
+        popupWindow.setOnDismissListener(() -> main.removeOnLayoutChangeListener(this));
+
+        if (tmpComment != null) {
+            etComment.setText(tmpComment);
+            etComment.setSelection(tmpComment.length());
+        } else {
+            etComment.setText("");
+        }
+
+        // popupwindow要等主画面加载完才能显示，异步可以确保主画面加载完成后调用显示
+        new Handler().post(() -> popupWindow.showAtLocation(main, Gravity.BOTTOM, 0, 0));
+        // 要等到popupwindow画面加载完成后软键盘showSoftInput才有效
+        new Handler().postDelayed(() -> {
+            etComment.requestFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.showSoftInput(etComment, 0);
+            }
+
+            // 确保软键盘弹出以后才设置监听
+            new Handler().postDelayed(() -> main.addOnLayoutChangeListener(this), 1000);
+        }, SOFT_INPUT_SHOW_DELAY);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (commonMedia != null) {
+            commonMedia.onConfigurationChanged(newConfig);
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) { // 横屏
+                contentView.setVisibility(View.GONE);
+                adapter.hideCommentList();
+                if (isChangeShareBtn) { // 音频+文章
+                    imgShare.setVisibility(View.GONE);
+                    imgShareFull.setVisibility(View.VISIBLE);
+                    // 全屏模式夏不允许弹出迷你播放器
+                    isIntercept = false;
+                }
+            } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) { // 竖屏
+                contentView.setVisibility(View.VISIBLE);
+                adapter.showCommentList();
+                if (isChangeShareBtn) {
+                    imgShare.setVisibility(View.VISIBLE);
+                    imgShareFull.setVisibility(View.GONE);
+                    isIntercept = true;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (commonMedia != null) {
+            commonMedia.close();
+        }
+        if (popupWindow != null) {
+            popupWindow.dismiss();
+        }
+    }
+
+    /**
+     * 取得媒体数据所需参数
+     *
+     * @return
+     */
+    private CommonMediaOption getOption(int type, ArticleDetailGetBean.ResultObjectBean rob) {
+        CommonMediaOption option = new CommonMediaOption();
+        option.setId(-1);
+        option.setShowCourseList(false);
+        Course course = new Course();
+        Lesson lesson = new Lesson();
+        lesson.setId(1);
+        lesson.setTitle("");
+        course.setLesson(lesson);
+        option.setCourse(course);
+
+        List<Media> audios;
+        List<Media> videos;
+        List<ArticleDetailGetBean.ResultObjectBean.ArticleBean.AudioListBean> audiosList;
+        List<ArticleDetailGetBean.ResultObjectBean.ArticleBean.VideoListBean> videosList;
+        switch (type) {
+            case 1: // 音频
+                option.setType(CommonMediaOption.MUSIC_ONLY);
+                audios = new ArrayList<>();
+                lesson.setAudioList(audios);
+                audiosList = rob.getArticle().getAudioList();
+                if (audiosList != null && audiosList.size() > 0) {
+                    for (ArticleDetailGetBean.ResultObjectBean.ArticleBean.AudioListBean ab : audiosList) {
+                        Media audio = new Media();
+                        audio.setVid(Integer.valueOf(ab.getVid()));
+                        audio.setVideoName(ab.getVideoName());
+                        audio.setOrigUrl(ab.getOrigUrl());
+                        audios.add(audio);
+                    }
+                    option.setMediaID(audios.get(0).getVid());
+                }
+                break;
+            case 2: // 视频
+                option.setType(CommonMediaOption.VIDEO_ONLY);
+                videos = new ArrayList<>();
+                lesson.setVideoList(videos);
+                videosList = rob.getArticle().getVideoList();
+                if (videosList != null && videosList.size() > 0) {
+                    for (ArticleDetailGetBean.ResultObjectBean.ArticleBean.VideoListBean vb : videosList) {
+                        Media video = new Media();
+                        video.setVid(Integer.valueOf(vb.getVid()));
+                        video.setVideoName(vb.getVideoName());
+                        video.setOrigUrl(vb.getOrigUrl());
+                        videos.add(video);
+                    }
+                    option.setMediaID(videos.get(0).getVid());
+                }
+                break;
+        }
+
+        return option;
+    }
+
+    /**
+     * 打开分享页面
+     *
+     * @param rob
+     */
+    private void showShare(ArticleDetailGetBean.ResultObjectBean rob) {
+        // TODO api实装
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
+        // 不显示腾讯微博
+        oks.addHiddenPlatform("TencentWeibo");
+        String shareContent = "http://www.baidu.com/";
+        oks.setShareContentCustomizeCallback((platform, paramsToShare) -> {
+            switch (platform.getName()) {
+                case "SinaWeibo":
+                    paramsToShare.setText(shareContent);
+                    paramsToShare.setImageUrl("http://wx4.sinaimg.cn/square/968733e0ly1fik9z1zgikj2028028mxj.jpg");
+                    break;
+                case "Wechat":
+                    paramsToShare.setShareType(Platform.SHARE_WEBPAGE);
+                    paramsToShare.setTitle("title");
+                    paramsToShare.setText("aaaaaa");
+                    paramsToShare.setUrl(shareContent);
+                    paramsToShare.setImageUrl("http://wx4.sinaimg.cn/square/968733e0ly1fik9z1zgikj2028028mxj.jpg");
+                    break;
+                case "WechatMoments":
+                    paramsToShare.setShareType(Platform.SHARE_WEBPAGE);
+                    paramsToShare.setTitle("title");
+                    paramsToShare.setUrl(shareContent);
+                    paramsToShare.setImageUrl("http://wx4.sinaimg.cn/square/968733e0ly1fik9z1zgikj2028028mxj.jpg");
+                    break;
+                case "QQ":
+                    paramsToShare.setTitle("title");
+                    paramsToShare.setTitleUrl(shareContent);
+                    paramsToShare.setText("aaaaaa");
+                    paramsToShare.setImageUrl("http://wx4.sinaimg.cn/square/968733e0ly1fik9z1zgikj2028028mxj.jpg");
+                    break;
+            }
+        });
+        oks.setCallback(new PlatformActionListener() {
+            @Override
+            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+                ToastUtil.getToast(ShareArticleActivity.this, getString(R.string.ssdk_oks_share_completed), "center", 0, 180).show();
+            }
+
+            @Override
+            public void onError(Platform platform, int i, Throwable throwable) {
+                ToastUtil.getToast(ShareArticleActivity.this, getString(R.string.ssdk_oks_share_failed), "center", 0, 180).show();
+            }
+
+            @Override
+            public void onCancel(Platform platform, int i) {
+                ToastUtil.getToast(ShareArticleActivity.this, getString(R.string.ssdk_oks_share_canceled), "center", 0, 180).show();
+            }
+        });
+
+        // 启动分享GUI
+        oks.show(this);
+    }
+}

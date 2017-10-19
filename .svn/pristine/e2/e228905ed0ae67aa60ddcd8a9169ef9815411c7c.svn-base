@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/comment_item"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/author_icon"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="7dp"
+            android:src="@drawable/icon1_default"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_toRightOf="@id/author_icon"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/author_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="38dp"
+                android:layout_marginTop="12dp"
+                android:ellipsize="end"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:textColor="#5d5e5e"
+                android:textSize="13dp"/>
+
+            <TextView
+                android:id="@+id/comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="21dp"
+                android:layout_marginRight="38dp"
+                android:layout_marginTop="17dp"
+                android:textColor="#000000"
+                android:textSize="13dp"/>
+
+            <View
+                android:id="@+id/v_line"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#f2f3f4"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/delete_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true">
+
+            <ImageView
+                android:layout_width="15.5dp"
+                android:layout_height="15dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="12dp"
+                android:src="@mipmap/shanchu"/>
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

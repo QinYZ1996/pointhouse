@@ -1,0 +1,78 @@
+package com.pointhouse.chiguan.k1_9;
+
+import com.pointhouse.chiguan.common.jsonObject.ArticleDetailGetBean;
+
+import java.util.List;
+
+/**
+ * Created by gyh on 2017/9/4.
+ */
+
+public class Comment {
+    private String authorIconUrl;
+    private String authorName;
+    private String comment;
+    private boolean deletable;
+    private boolean isEmpty;
+
+    public String getAuthorIconUrl() {
+        return authorIconUrl;
+    }
+
+    public void setAuthorIconUrl(String authorIconUrl) {
+        this.authorIconUrl = authorIconUrl;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public boolean isDeletable() {
+        return deletable;
+    }
+
+    public void setDeletable(boolean deletable) {
+        this.deletable = deletable;
+    }
+
+    public boolean isEmpty() {
+        return isEmpty;
+    }
+
+    public void setEmpty(boolean empty) {
+        isEmpty = empty;
+    }
+
+    /**
+     * 该方法用来重新加载评论数据
+     * 使用时机：画面初期化、删除评论(拷贝到adapter中)、追加评论
+     */
+    public static void loadListData(CommentItemAdapter adapter, ArticleDetailGetBean.ResultObjectBean rob) {
+        // TODO
+        List<ArticleDetailGetBean.ResultObjectBean.CommentsBean> comments = rob.getComments();
+        if (comments != null && comments.size() > 0) { // 有数据
+            for (ArticleDetailGetBean.ResultObjectBean.CommentsBean cb : comments) {
+                Comment comment = new Comment();
+                comment.setAuthorIconUrl(cb.getUserAvatar());
+                comment.setAuthorName(cb.getUserName());
+                comment.setComment(cb.getContent());
+                comment.setDeletable(true); // TODO
+                adapter.addComment(comment);
+            }
+        } else {
+            adapter.addEmptyView();
+        }
+    }
+}

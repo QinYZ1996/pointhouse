@@ -1,0 +1,233 @@
+package com.pointhouse.chiguan.wxapi;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.View;
+
+import com.pointhouse.chiguan.Application.GlobalApplication;
+import com.pointhouse.chiguan.R;
+import com.pointhouse.chiguan.common.http.RetrofitFactory;
+import com.pointhouse.chiguan.common.util.Constant;
+import com.pointhouse.chiguan.common.util.ToastUtil;
+import com.pointhouse.chiguan.l1.LoginNetWork;
+import com.pointhouse.chiguan.l1.Login_activity;
+import com.pointhouse.chiguan.w1_7.MydataActivity;
+import com.tencent.mm.opensdk.modelbase.BaseReq;
+import com.tencent.mm.opensdk.modelbase.BaseResp;
+import com.tencent.mm.opensdk.modelmsg.SendAuth;
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
+import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
+
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+
+import cn.sharesdk.wechat.utils.WechatHandlerActivity;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
+import static com.pointhouse.chiguan.wxapi.WXEntryActivity.SHARE_TYPE.Type_WXSceneSession;
+import static com.pointhouse.chiguan.wxapi.WXEntryActivity.SHARE_TYPE.Type_WXSceneTimeline;
+
+
+/**
+ * Created by PC-sunjb on 2017/6/23.
+ */
+
+public class WXEntryActivity extends WechatHandlerActivity implements IWXAPIEventHandler {
+
+    private Bundle bundle;
+    public static Login_activity login_activity;
+
+    enum SHARE_TYPE {Type_WXSceneSession, Type_WXSceneTimeline}
+
+
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //必须调用此句话,不然无法回调
+        GlobalApplication.wxapi.handleIntent(getIntent(), this);
+    }
+
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        GlobalApplication.wxapi.handleIntent(intent, WXEntryActivity.this);//必须调用此句话
+    }
+
+    @Override
+    public void onReq(BaseReq baseReq) {
+        System.out.println("进入onReq方法");
+    }
+
+    @Override
+    public void onResp(BaseResp baseResp) {
+//        int i = 0;
+//        if(i == 0){
+//            shareWXSceneTimeline();
+//        }
+//        String result;
+//        switch (baseResp.errCode) {
+//            case BaseResp.ErrCode.ERR_OK: result = "分享成功";
+//                break;
+//            case BaseResp.ErrCode.ERR_USER_CANCEL: result = "取消分享";
+//                break;
+//            case BaseResp.ErrCode.ERR_AUTH_DENIED: result = "分享被拒绝";
+//                break;
+//            default: result = "发送返回";
+//                break; }
+        //Toast.makeText(this, result, Toast.LENGTH_SHORT).show(); finish();
+
+        System.out.println("微信开始返回数据:");
+        bundle = getIntent().getExtras();
+        SendAuth.Resp resp = new SendAuth.Resp(bundle);
+
+        if (resp.errCode == BaseResp.ErrCode.ERR_OK) {//用户同意授权
+            if (baseResp.getType() == 2) { // 微信分享
+                ToastUtil.getToast(this, getString(R.string.ssdk_oks_share_completed), "center", 0, 180).show();
+            }
+            String code = resp.code;
+            if (code == null) {
+                finish();
+            }
+            Log.v("CODE", code);
+            //获取token的url
+            String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + Constant.WX_APP_ID + "&secret=" + Constant.app_secret + "&code=" + code + "&grant_type=authorization_code";
+            getToken(url);
+        } else if (resp.errCode == BaseResp.ErrCode.ERR_USER_CANCEL) {//用户取消授权
+            if (baseResp.getType() == 2) { // 微信分享
+                ToastUtil.getToast(this, getString(R.string.ssdk_oks_share_canceled), "center", 0, 180).show();
+            }
+            finish();
+
+        } else if (resp.errCode == BaseResp.ErrCode.ERR_AUTH_DENIED) {//用户拒绝授权
+            finish();
+        }
+    }
+
+    /**
+     * 使用code
+     *
+     * @param url
+     */
+    private void getToken(String url) {
+        RetrofitFactory.getInstance().getRequestServices()
+                .getStringRx(url)
+                .subscribeOn(Schedulers.newThread())
+                .map(response -> {
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    Log.d("response:", response.toString());
+                    Log.d("response:", jsonObject.toString());
+                    return jsonObject;
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(jsonObject -> {
+                    if (jsonObject != null) {
+                        GlobalApplication.openid = jsonObject.getString("openid");
+                        GlobalApplication.access_token = jsonObject.getString("access_token");
+                        String path = "https://api.weixin.qq.com/sns/userinfo?access_token="
+                                + GlobalApplication.access_token
+                                + "&openid="
+                                + GlobalApplication.openid;
+                        GlobalApplication.user.setOpenid(GlobalApplication.openid);
+                        getWXUserName(this, path);
+                    }
+                }, throwable -> {
+                    Log.d("error", "请求openid错误");
+//                    Intent intent = IntentUriUtil.getIntent("l1","l1");
+//                    startActivity(intent);
+                    finish();
+                });
+    }
+
+    public void getWXUserName(Context context, String url) {
+        RetrofitFactory.getInstance().getRequestServices()
+                .getWXUserInfo(url)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> {
+                    if (response != null && !response.equals("")) {
+                        GlobalApplication.wxnickname = response.getString("nickname");
+                        if (GlobalApplication.BandweChat == 0) {
+                            LoginNetWork loginNetWork = new LoginNetWork();
+                            loginNetWork.getWXImageUrl(this, GlobalApplication.openid, GlobalApplication.wxnickname, response.getString("headimgurl"));
+                        } else {
+                            new MydataActivity().weChatBand(this);
+                            Intent intent = new Intent(this, MydataActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+
+                    } else {
+                        ToastUtil.getToast(context, "返回数据异常，获取用户名异常", "center", 0, 180).show();
+                    }
+                }, throwable -> {
+                    throwable.printStackTrace();
+                    //ToastUtil.getToast(context,"网络不稳定，获取用户名异常","center",0,180).show();
+                });
+    }
+
+
+    /**
+     * 微信分享
+     *
+     * @param view
+     */
+    public void shareWXSceneSession(View view) {
+        share(Type_WXSceneSession);
+    }
+
+    public void shareWXSceneTimeline() {
+        share(Type_WXSceneTimeline);
+    }
+
+    private void share(SHARE_TYPE type) {
+        WXWebpageObject webpageObject = new WXWebpageObject();
+        webpageObject.webpageUrl = "http://www.initobject.com/";
+        WXMediaMessage msg = new WXMediaMessage(webpageObject);
+        msg.title = "Hi,Tips";
+        msg.description = "这是一个校园应用";
+        Bitmap thumb = BitmapFactory.decodeResource(getResources(), R.drawable.nim_actionbar_black_bg);
+        msg.thumbData = bmpToByteArray(thumb, true);
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = buildTransaction("Req");
+        req.message = msg;
+        switch (type) {
+            case Type_WXSceneSession:
+                req.scene = req.WXSceneSession;
+                break;
+            case Type_WXSceneTimeline:
+                req.scene = req.WXSceneTimeline;
+                break;
+        }
+        GlobalApplication.wxapi.sendReq(req);
+        finish();
+    }
+
+    private String buildTransaction(final String type) {
+        return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
+    }
+
+    public static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, output);
+        if (needRecycle) {
+            bmp.recycle();
+        }
+        byte[] result = output.toByteArray();
+        try {
+            output.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+}

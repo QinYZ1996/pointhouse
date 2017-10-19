@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="57dp"
+    android:background="@color/white"
+    android:id="@+id/relativeLayout">
+    <LinearLayout
+        android:id="@+id/findBackBtnView"
+        android:layout_width="60dp"
+        android:layout_height="56dp"
+        android:orientation="horizontal"></LinearLayout>
+    <Button
+        android:id="@+id/findBackBtn"
+        android:layout_width="7.5dp"
+        android:layout_height="18dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="27dp"
+        android:background="@mipmap/backblack" />
+    <TextView
+        android:id="@+id/titleBarTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="60dp"
+        android:layout_centerVertical="true"
+        />
+    <ImageView
+        android:id="@+id/view1"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f3f4f6"/>
+</RelativeLayout>

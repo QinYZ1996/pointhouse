@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/viewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <ImageView
+            android:id="@+id/imgBack3"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/media_back_margin"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/media_back"
+            android:scaleType="center"
+            android:src="@mipmap/backwhite" />
+
+        <ImageView
+            android:id="@+id/imgBack2"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/media_back_margin"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/media_back"
+            android:scaleType="center"
+            android:src="@mipmap/backblack" />
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/imgBack2"
+            android:layout_toRightOf="@id/imgBack2"
+            android:gravity="center"
+            android:text="@string/media_back"
+            android:textColor="@color/black"
+            android:textSize="17.0dp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/divider"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#cccccc"
+            android:orientation="horizontal" />
+    </RelativeLayout>
+
+</RelativeLayout>

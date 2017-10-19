@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff" >
+
+    <LinearLayout
+        android:id="@+id/Father_BottemView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:baselineAligned="false"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:id="@+id/PhCourseBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/PhCourseImg"
+                android:src="@drawable/tab_menu_homepage"
+                android:layout_width="26dp"
+                android:layout_height="26.5dp"
+                android:layout_centerHorizontal="true"
+                android:paddingTop="5dp">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/PhCourseTxt"
+                android:layout_below="@id/PhCourseImg"
+                style="@style/tab_menu_text"
+                android:text="@string/FirstView"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/ReadyToLearnBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:baselineAligned="false"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/ReadyToLearnImg"
+                android:src="@drawable/tab_menu_study"
+                android:layout_width="26dp"
+                android:layout_height="26.5dp"
+                android:layout_centerHorizontal="true"
+                android:paddingTop="5dp">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/ReadyToLearnTxt"
+                android:layout_below="@id/ReadyToLearnImg"
+                style="@style/tab_menu_text"
+                android:text="@string/allanytime"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/InteractiveGroupBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:baselineAligned="false"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/InteractiveGroupImg"
+                android:src="@drawable/tab_menu_interactchat"
+                android:layout_width="26dp"
+                android:layout_height="26.5dp"
+                android:layout_centerHorizontal="true"
+                android:paddingTop="5dp">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/InteractiveGroupTxt"
+                android:layout_below="@id/InteractiveGroupImg"
+                style="@style/tab_menu_text"
+                android:text="@string/Interactive_group" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/MyManagementBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:baselineAligned="false"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/MyManagementImg"
+                android:src="@drawable/tab_menu_me"
+                android:layout_width="26dp"
+                android:layout_height="26.5dp"
+                android:layout_centerHorizontal="true"
+                android:paddingTop="5dp">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/MyManagementTxt"
+                style="@style/tab_menu_text"
+                android:text="@string/mine"
+                android:layout_below="@id/MyManagementImg"/>
+        </RelativeLayout>
+    </LinearLayout>
+    <View
+        android:id="@+id/div_tab_bar"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_above="@id/Father_BottemView"
+        android:background="@mipmap/linebar" />
+
+    <FrameLayout
+        android:id="@+id/ly_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/div_tab_bar"></FrameLayout>
+</RelativeLayout>

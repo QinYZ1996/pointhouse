@@ -1,0 +1,354 @@
+package com.pointhouse.chiguan.t1;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.netease.nim.demo.common.util.sys.GroupMsgUtil;
+import com.pointhouse.chiguan.Application.GlobalApplication;
+import com.pointhouse.chiguan.Application.MediaService;
+import com.pointhouse.chiguan.Application.SysApplication;
+import com.pointhouse.chiguan.R;
+import com.pointhouse.chiguan.common.mydialog.MyDialog;
+import com.pointhouse.chiguan.common.util.MediaServiceHelper;
+import com.pointhouse.chiguan.h1.GroupMainActivity;
+import com.pointhouse.chiguan.k1.CourseClassifiCationMainActivity;
+import com.pointhouse.chiguan.s1.WalkmanMainActivity;
+import com.pointhouse.chiguan.w1.PersonalCenterActivity;
+
+import java.util.Stack;
+
+
+/**
+ * Created by ljj on 2017/6/28.
+ */
+
+public class FatherActivity extends FragmentActivity implements View.OnClickListener  {
+
+
+    //Activity UI Object
+    private RelativeLayout phCourseBtn;
+    private TextView phCourseTxt;
+    private ImageView phCourseImg;
+    private RelativeLayout readyToLearnBtn;
+    private TextView readyToLearnTxt;
+    private ImageView readyToLearnImg;
+    private RelativeLayout interactiveGroupBtn;
+    private TextView interactiveGroupTxt;
+    private ImageView interactiveGroupImg;
+    private RelativeLayout myManagementBtn;
+    private TextView myManagementTxt,interactiveGroupNum;
+    private ImageView myManagementImg;
+    private int islogin = 0;
+    private static Stack<Activity> activityStack;
+    String fromid;
+    Thread thread;
+    boolean threadFlg;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.t1_activity_father);
+
+//        //取消状态栏
+//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //隐藏导航栏
+        //getActionBar().hide();
+        bindViews();
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
+        phCourseBtn.performClick();
+        init();
+        //网易云信登录
+        //IMLoginUtil.login("test","123456", null, code->{
+        //    if (code == 302 || code == 404) {
+        //        Toast.makeText(FatherActivity.this, "用户名或密码错误", Toast.LENGTH_SHORT).show();
+        //    } else {
+        //        Toast.makeText(FatherActivity.this, "登录失败: " + code, Toast.LENGTH_SHORT).show();
+        //    }
+        //},exception->Toast.makeText(FatherActivity.this, "登录异常", Toast.LENGTH_LONG).show());
+//        if(GlobalApplication.LoginType!=0){
+//            ToastUtil.getToast(this,"欢迎登陆","center",0,180).show();
+//        }
+        UrlSchemeLogin();
+        SysApplication.getInstance().addActivity(this);
+    }
+
+    protected void onResume(){
+        super.onResume();
+        threadFlg = true;
+        listenProgress();
+    }
+
+    protected void onPause(){
+        threadFlg = false;
+        super.onPause();
+    }
+
+    public PersonalCenterActivity getInstance(){
+        synchronized (FatherActivity.class){
+            if(GlobalApplication.personalCenterActivity==null){
+                GlobalApplication.personalCenterActivity = new PersonalCenterActivity();
+            }
+        }
+        return GlobalApplication.personalCenterActivity;
+    }
+
+
+
+    public void init(){
+        myManagementBtn = (RelativeLayout) findViewById(R.id.MyManagementBtn);
+        readyToLearnBtn = (RelativeLayout) findViewById(R.id.ReadyToLearnBtn);
+        interactiveGroupBtn = (RelativeLayout) findViewById(R.id.InteractiveGroupBtn);
+        interactiveGroupNum = (TextView) findViewById(R.id.InteractiveGroupNum);
+
+
+        Uri uri = getIntent().getData();
+        if(uri!=null){
+            String url = uri.toString();
+            Log.d("url:",url);
+            fromid = uri.getQueryParameter("id");
+            Log.d("id:",fromid);
+            if(fromid.equals("w1")||fromid.equals("w1_11")){
+                this.islogin=1;
+                onClick(myManagementBtn);
+            }else if(fromid.equals("s1")){
+                onClick(readyToLearnBtn);
+            }else if(fromid.equals("h1")){
+                onClick(interactiveGroupBtn);
+            }else if(fromid.equals("l1")){
+                this.islogin=1;
+            }
+        }else {
+            this.islogin=1;
+        }
+    }
+
+    //URl启动app接收数据
+    public void UrlSchemeLogin(){
+        Intent i_getvalue = getIntent();
+        String action = i_getvalue.getAction();
+
+        if(Intent.ACTION_VIEW.equals(action)){
+
+            Uri uri = i_getvalue.getData();
+            if(uri != null){
+                //模拟获取url的参数
+                String name = uri.getQueryParameter("name");
+                String age= uri.getQueryParameter("age");
+            }
+        }
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        FragmentManager fManager = getSupportFragmentManager();
+        FragmentTransaction fTransaction = fManager.beginTransaction();
+        switch (v.getId()) {
+            case R.id.PhCourseBtn:
+                setSelected();
+                phCourseTxt.setSelected(true);
+                phCourseImg.setSelected(true);
+                CourseClassifiCationMainActivity courseClassifiCationMainFragment = new CourseClassifiCationMainActivity();
+                fTransaction.replace(R.id.ly_content, courseClassifiCationMainFragment).commit();
+                break;
+            case R.id.ReadyToLearnBtn:
+                setSelected();
+                readyToLearnTxt.setSelected(true);
+                readyToLearnImg.setSelected(true);
+                WalkmanMainActivity walkmanMainActivity = new WalkmanMainActivity();
+                fTransaction.replace(R.id.ly_content, walkmanMainActivity).commit();
+                break;
+            case R.id.InteractiveGroupBtn:
+                setSelected();
+                interactiveGroupTxt.setSelected(true);
+                interactiveGroupImg.setSelected(true);
+                GroupMainActivity groupMainActivity = new GroupMainActivity();
+                fTransaction.replace(R.id.ly_content, groupMainActivity).commit();
+                break;
+            case R.id.MyManagementBtn:
+                setSelected();
+                myManagementTxt.setSelected(true);
+                myManagementImg.setSelected(true);
+//                if(GlobalApplication.personalCenterActivity==null){
+//                    GlobalApplication.personalCenterActivity = getInstance();
+//                }
+//                if(FatherActivity.this.islogin==1){
+//                    GlobalApplication.personalCenterActivity = new PersonalCenterActivity();
+//                    this.islogin=0;
+//                }
+                PersonalCenterActivity personalCenterActivity = new PersonalCenterActivity();
+                fTransaction.replace(R.id.ly_content,personalCenterActivity).commit();
+                break;
+        }
+    }
+
+    private void bindViews() {
+        phCourseBtn = (RelativeLayout) findViewById(R.id.PhCourseBtn);
+        phCourseTxt = (TextView) findViewById(R.id.PhCourseTxt);
+        phCourseImg = (ImageView) findViewById(R.id.PhCourseImg);
+
+        readyToLearnBtn = (RelativeLayout) findViewById(R.id.ReadyToLearnBtn);
+        readyToLearnTxt = (TextView) findViewById(R.id.ReadyToLearnTxt);
+        readyToLearnImg = (ImageView) findViewById(R.id.ReadyToLearnImg);
+
+        interactiveGroupBtn = (RelativeLayout) findViewById(R.id.InteractiveGroupBtn);
+        interactiveGroupTxt = (TextView) findViewById(R.id.InteractiveGroupTxt);
+        interactiveGroupImg = (ImageView) findViewById(R.id.InteractiveGroupImg);
+
+        myManagementBtn = (RelativeLayout) findViewById(R.id.MyManagementBtn);
+        myManagementTxt = (TextView) findViewById(R.id.MyManagementTxt);
+        myManagementImg = (ImageView) findViewById(R.id.MyManagementImg);
+
+        phCourseBtn.setOnClickListener(this);
+        readyToLearnBtn.setOnClickListener(this);
+        interactiveGroupBtn.setOnClickListener(this);
+        myManagementBtn.setOnClickListener(this);
+    }
+
+
+    //重置所有文本的选中状态
+    private void setSelected() {
+        phCourseTxt.setSelected(false);
+        phCourseImg.setSelected(false);
+        readyToLearnTxt.setSelected(false);
+        readyToLearnImg.setSelected(false);
+        interactiveGroupTxt.setSelected(false);
+        interactiveGroupImg.setSelected(false);
+        myManagementTxt.setSelected(false);
+        myManagementImg.setSelected(false);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            //if no more history in stack
+            if (this.getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                showLoginDialog();
+
+//                new AlertDialog.Builder(this).setMessage("退出程序？").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // TODO Auto-generated method stub
+//                    }
+//                })
+//                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//
+//                            }
+//                        })
+//                        .create().show();
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void showLoginDialog() {
+        View view = getLayoutInflater().inflate(R.layout.common_dialog, null);
+        final TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle);
+        tvTitle.setText("退出程序？");
+        final TextView btnYes = (TextView) view.findViewById(R.id.f_quchecbutton_btn_queding);
+        final TextView btlNo = (TextView) view.findViewById(R.id.f_quchecbutton_btn_quxiao);
+        final MyDialog builder = new MyDialog(this,0,0,view,R.style.DialogTheme);
+
+        builder.setCancelable(false);
+        builder.show();
+        //设置对话框显示的View
+        //点击确定是的监听
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.cancel();
+                SysApplication.getInstance().exit();
+            }
+        });
+
+
+        btlNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.cancel();
+            }
+        });
+
+    }
+
+    //手指按下的点为(x1, y1)手指离开屏幕的点为(x2, y2)
+    float x1 = 0;
+    float x2 = 0;
+    float y1 = 0;
+    float y2 = 0;
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        //继承了Activity的onTouchEvent方法，直接监听点击事件
+        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            //当手指按下的时候
+            x1 = event.getX();
+            y1 = event.getY();
+        }
+        if(event.getAction() == MotionEvent.ACTION_MOVE){
+            //当手指移动的时候
+            x2 = event.getX();
+            y2 = event.getY();
+            if(y1 - y2 > 50) {
+                MediaServiceHelper.getService(this, MediaService::backGroundHide);//隐藏
+            }else if(y2 - y1 > 50) {
+                MediaServiceHelper.getService(this, MediaService::reFleshDisplay);//显示
+            }
+        }
+        return super.dispatchTouchEvent(event);
+    }
+
+
+
+    /**
+     * 监听列队内是否还有需要下载的。
+     */
+    private void listenProgress(){
+        thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(threadFlg){
+                    if(GroupMsgUtil.hasMsg()){
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                interactiveGroupNum.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                interactiveGroupNum.setVisibility(View.GONE);
+                            }
+                        });
+                    }
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        thread.start();
+    }
+}

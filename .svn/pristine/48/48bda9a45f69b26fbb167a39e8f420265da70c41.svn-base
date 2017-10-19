@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/viewMain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+    <!--视频-->
+    <ScrollView
+        android:id="@+id/viewScroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/commonMedia">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/viewFrameContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <include layout="@layout/common_media" />
+
+                <FrameLayout
+                    android:id="@+id/viewTextOnly"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <LinearLayout
+                            android:id="@+id/viewBack"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
+
+                        <WebView
+                            android:id="@+id/txtContentTextOnly"
+                            style="@style/media_text"
+                            android:layout_alignParentTop="true"
+
+                            android:layout_marginTop="50dp"
+                            android:text="@string/media_reading"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="#f3f5f6" />
+                    </RelativeLayout>
+
+                </FrameLayout>
+            </LinearLayout>
+
+            <!--分割线-->
+            <RelativeLayout
+                android:id="@+id/viewContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/viewFrameContainer">
+
+                <RelativeLayout
+                    android:id="@+id/relative2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#f3f5f6" />
+
+                <!--Title/练习题-->
+                <RelativeLayout
+                    android:id="@+id/relative3"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_below="@id/relative2">
+
+                    <TextView
+                        android:id="@+id/txtTitle"
+                        style="@style/media_text"
+                        android:layout_marginLeft="11dp"
+                        android:layout_marginStart="11dp"
+                        android:text="@string/media_reading"
+                        android:textSize="16.0dp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/imgExercise"
+                        android:layout_width="44.5dp"
+                        android:layout_height="18dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="17dp"
+                        android:layout_marginRight="17dp"
+                        android:contentDescription="@string/media_exercise"
+                        android:src="@mipmap/lianxiti"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+                <!--分割线-->
+                <RelativeLayout
+                    android:id="@+id/relative4"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:layout_below="@id/relative3"
+                    android:background="#f3f5f6" />
+
+                <!--TABS-->
+                <TabHost
+                    android:id="@+id/tabHost"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_below="@id/relative4">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TabWidget
+                            android:id="@android:id/tabs"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:background="#f3f5f6" />
+
+                        <FrameLayout
+                            android:id="@android:id/tabcontent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <RelativeLayout
+                                android:id="@+id/tab1"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <WebView
+                                    android:id="@+id/txtInfo"
+                                    style="@style/media_text"
+                                    android:layout_centerVertical="false"
+                                    android:layout_marginTop="30dp"
+                                    android:text="@string/media_reading"
+                                    android:textStyle="bold" />
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/tab2"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
+
+                                <WebView
+                                    android:id="@+id/txtContent"
+                                    style="@style/media_text"
+                                    android:layout_centerVertical="false"
+                                    android:layout_marginTop="30dp"
+                                    android:text="@string/media_reading"
+                                    android:textStyle="bold" />
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/tab3"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
+
+                                <WebView
+                                    android:id="@+id/txtChat"
+                                    style="@style/media_text"
+                                    android:layout_centerVertical="false"
+                                    android:layout_marginTop="30dp"
+                                    android:text="@string/media_reading"
+                                    android:textStyle="bold" />
+
+                            </RelativeLayout>
+
+
+                        </FrameLayout>
+                    </LinearLayout>
+
+                </TabHost>
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

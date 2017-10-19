@@ -1,0 +1,156 @@
+package com.pointhouse.chiguan.w1_1;
+
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+
+import com.pointhouse.chiguan.Application.GlobalApplication;
+import com.pointhouse.chiguan.R;
+import com.pointhouse.chiguan.common.base.MediaBaseActivity;
+import com.pointhouse.chiguan.common.http.RetrofitFactory;
+import com.pointhouse.chiguan.common.jsonObject.MyOrderListGetBean;
+import com.pointhouse.chiguan.common.updatecommon.PullToRefreshBase;
+import com.pointhouse.chiguan.common.updatecommon.PullToRefreshListView;
+import com.pointhouse.chiguan.common.util.JsonUtil;
+import com.pointhouse.chiguan.common.util.ToastUtil;
+
+import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
+/**
+ * Created by PC-sunjb on 2017/6/26.
+ */
+
+public class MyPurchaseActivity extends MediaBaseActivity {
+
+    private static final String TAG = "W1-1";
+    private static final int LIMIT = 20;
+
+    private PullToRefreshListView refreshListView;
+    private MyPurchaseItemAdapter adapter;
+    private int page = 0;
+
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.w1_1_activity_mypurchase);
+
+        initListView();
+    }
+
+    public void Pur_back(View view) {
+        super.onBackPressed();
+    }
+
+    public void initListView() {
+        adapter = new MyPurchaseItemAdapter(this);
+        refreshListView = (PullToRefreshListView) findViewById(R.id.mypurchaseList);
+        refreshListView.getRefreshableView().setAdapter(adapter);
+        refreshListView.setPullRefreshEnabled(false);
+        // setPullLoadEnabled(true) => 数据非满屏时，最后一行下面总会有分割线，但只有上拉到画面最后才会加载，所以不会加载数据，但上拉加载只有一行数据不滑动不会显示
+        refreshListView.setPullLoadEnabled(false);
+        // setScrollLoadEnabled(true) => 数据非满屏时，最后一行下面不会有分割线，但会加载数据，上下拉都会加载，直到满屏时上拉才加载
+        refreshListView.setScrollLoadEnabled(true);
+        refreshListView.getRefreshableView().setOnItemClickListener(((parent, view, position, id) -> {
+            MyPurchase item = adapter.getItemList().get(position);
+            if (item.isDate()) return;
+
+            Intent intent;
+            Context context = view.getContext();
+            if (item.getDataType() == 0) { // 课程
+                Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(GlobalApplication.scheme_uri+"k1_2" + "?id=" + String.valueOf(item.getId())));
+                it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(it);
+            } else { // 文章
+                // TODO 迁移 => K1-9 分享文章详细画面
+//                ToastUtil.getToast(this, "迁移到K1-9 分享文章详细画面,", "center", 0, 180).show();
+            }
+        }));
+
+        refreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                if (adapter.getCount() < page * LIMIT) {
+                    refreshListView.onRefreshComplete();
+                } else {
+                    requestGetMyPurchaseList(false);
+                }
+            }
+        });
+
+        requestGetMyPurchaseList(true);
+    }
+
+    private void requestGetMyPurchaseList(boolean isInit) {
+        String url = JsonUtil.getURLWithArrayParamIfExists("myOrderList", String.valueOf(++page));
+        RetrofitFactory.getInstance().getRequestServicesToken().get(url)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    MyOrderListGetBean myOrderListGetBean = new MyOrderListGetBean(result.toJSONString());
+//                    MyOrderListGetBean myOrderListGetBean = new MyOrderListGetBean(TestMyOrderListGetBean.jsonEmpty); // for test
+//                    MyOrderListGetBean myOrderListGetBean = isInit ? new MyOrderListGetBean(TestMyOrderListGetBean.jsonNormal) : new MyOrderListGetBean(TestMyOrderListGetBean.jsonLoaded); // for test
+                    if (myOrderListGetBean.hasError()) {
+                        ToastUtil.getToast(this, JsonUtil.getRequestErrMsg(TAG, this, result), "center", 0, 180).show();
+                    } else {
+                        ListView listView = refreshListView.getRefreshableView();
+                        List<MyOrderListGetBean.ResultObjectBean> resultObjectBeans = myOrderListGetBean.getResultObjectBeanList();
+                        boolean dateChecked = false;
+                        for (MyOrderListGetBean.ResultObjectBean rob : resultObjectBeans) {
+                            // 该日期不等于已加载数据最早的日期，则追加日期行
+                            List<MyOrderListGetBean.ResultObjectBean.CourseBean> coursesBeans = rob.getCourse();
+                            List<MyOrderListGetBean.ResultObjectBean.ActicleBean> articleBeans = rob.getActicle();
+                            if (isInit || dateChecked || !adapter.getEarliestDate().equals(rob.getDate())) {
+                                if ((coursesBeans != null && coursesBeans.size() > 0) || (articleBeans != null && articleBeans.size() > 0)) {
+                                    adapter.addDate(rob.getDate());
+                                }
+                            }
+
+                            if (!dateChecked) dateChecked = true;
+
+                            // 课程
+                            if (coursesBeans != null) {
+                                for (MyOrderListGetBean.ResultObjectBean.CourseBean cb : coursesBeans) {
+                                    adapter.addCourse(cb);
+                                }
+                            }
+
+                            // 文章
+                            if (articleBeans != null) {
+                                for (MyOrderListGetBean.ResultObjectBean.ActicleBean ab : articleBeans) {
+                                    adapter.addArticle(ab);
+                                }
+                            }
+                        }
+
+                        if (adapter.getCount() == 0) {
+                            View listEmptyView = View.inflate(this, R.layout.common_empty, (ViewGroup) listView.getParent());
+                            listView.setEmptyView(listEmptyView);
+                        }
+
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    if (!isInit) {
+                        refreshListView.onRefreshComplete();
+                    }
+                }, throwable -> {
+                    Log.e(TAG, throwable.getMessage());
+                    ToastUtil.getToast(this, getString(R.string.req_fail_msg), "center", 0, 180).show();
+                    if (!isInit) {
+                        refreshListView.onRefreshComplete();
+                    }
+                });
+    }
+}

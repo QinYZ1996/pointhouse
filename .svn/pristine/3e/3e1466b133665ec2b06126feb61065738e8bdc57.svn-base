@@ -1,0 +1,120 @@
+package com.pointhouse.chiguan.w1_3;
+
+import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import com.pointhouse.chiguan.R;
+import com.pointhouse.chiguan.common.http.RetrofitFactory;
+import com.pointhouse.chiguan.common.jsonObject.MyStudyGetBean;
+import com.pointhouse.chiguan.common.util.JsonUtil;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
+/**
+ * Created by P on 2017/7/31.
+ */
+
+public class MyStudyAdapter extends BaseAdapter {
+
+    private static final String PERCENT = "%";
+
+    private List<MyStudy> studyList;
+    private LayoutInflater mInflater;
+
+    public MyStudyAdapter(Context context) {
+        mInflater = LayoutInflater.from(context);
+        studyList = new ArrayList<>();
+    }
+
+    public void addMyStudy(MyStudy myStudy) {
+        studyList.add(myStudy);
+    }
+
+    public void clearData() {
+        studyList.clear();
+    }
+
+    @Override
+    public int getCount() {
+        return studyList.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return studyList.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder viewHolder;
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.w1_3_item_mystudy, null);
+            viewHolder = new ViewHolder();
+            viewHolder.lessonTitle = (TextView) convertView.findViewById(R.id.tv_lessonTitle);
+            viewHolder.courseTitle = (TextView) convertView.findViewById(R.id.tv_courseTitle);
+            viewHolder.processText = (TextView) convertView.findViewById(R.id.tv_process);
+            viewHolder.headImage = (ImageView) convertView.findViewById(R.id.iv_headIamge);
+            viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.pb_process);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
+
+        MyStudy study = studyList.get(position);
+        viewHolder.courseTitle.setText(study.getCourseTitle());
+        viewHolder.lessonTitle.setText(study.getLessonTitle());
+        viewHolder.processText.setText(study.getTotalProcess() + PERCENT);
+        viewHolder.progressBar.setProgress(Integer.parseInt(study.getTotalProcess()));
+        String thumb = study.getCourseThumb();
+        Picasso.with(convertView.getContext()).load(study.getCourseThumb()).placeholder(R.drawable.icon1_default).into(viewHolder.headImage);
+        if (thumb == null || "".equals(thumb)) {
+            final View view = convertView;
+            RetrofitFactory.getInstance().getRequestServicesToken().get(JsonUtil.getURLWithArrayParamIfExists("courseDetail", String.valueOf(study.getCourseId())))
+                    .subscribeOn(Schedulers.newThread())
+                    .map(result -> {
+                        switch (result.getIntValue("resultCode")) {
+                            case 1:
+                                return result.getJSONObject("resultObject").getJSONObject("course").getString("thumb");
+                            default:
+                                Log.e("W1-3", JsonUtil.getRequestErrMsg(null, view.getContext(), result));
+                                return null;
+                        }
+                    })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> {
+                        if (result != null && !"".equals(result)) {
+                            study.setCourseThumb(result);
+                            Picasso.with(view.getContext()).load(result).placeholder(R.drawable.icon1_default).into(viewHolder.headImage);
+                        }
+                    }, throwable -> {
+                        throwable.printStackTrace();
+                        Log.e("W1-3", "图片获取失败");
+                    });
+        }
+
+        return convertView;
+    }
+
+    class ViewHolder {
+        ImageView headImage;
+        TextView courseTitle, lessonTitle, processText;
+        ProgressBar progressBar;
+    }
+}

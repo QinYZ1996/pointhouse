@@ -1,0 +1,171 @@
+package com.pointhouse.chiguan.k1;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.pointhouse.chiguan.R;
+import com.pointhouse.chiguan.common.util.ToolUtil;
+import com.squareup.picasso.Picasso;
+
+import java.util.Vector;
+
+/**
+ * Created by ljj on 2017/8/30.
+ */
+
+public class ArticleItemAdapter extends BaseAdapter {
+
+    public class ArticleItem {
+        public int categoryId;
+        public String categoryTitle;
+        public int id;
+        public int favoriteNum;
+        public int contentType;
+        public double price;
+        public int buyersNum;
+        public int reading;
+        public String thumb;
+        public String title;
+        public int type;
+    }
+
+    private LayoutInflater mInflater;
+    private Vector<ArticleItemAdapter.ArticleItem> mModels = new Vector<ArticleItemAdapter.ArticleItem>();
+
+    public ArticleItemAdapter(Context context) {
+        mInflater = LayoutInflater.from(context);
+    }
+
+    public void addArticle(
+                            int categoryId,
+                            String categoryTitle,
+                            int id,
+                            int favoriteNum,
+                            int contentType,
+                            double price,
+                            int buyersNum,
+                            int reading,
+                            String thumb,
+                            String title,
+                            int type
+    ) {
+        ArticleItemAdapter.ArticleItem model = new ArticleItemAdapter.ArticleItem();
+        model.categoryId = categoryId;
+        model.categoryTitle = categoryTitle;
+        model.id = id;
+        model.favoriteNum = favoriteNum;
+        model.contentType = contentType;
+        model.price = price;
+        model.buyersNum = buyersNum;
+        model.reading = reading;
+        model.thumb = thumb;
+        model.title = title;
+        model.type = type;
+        mModels.add(model);
+    }
+
+    public void clean() {
+        mModels.clear();
+    }
+
+    @Override
+    public int getCount() {
+        // TODO Auto-generated method stub
+        return mModels.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        if (position >= getCount()) {
+            return null;
+        }
+        return mModels.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        // TODO Auto-generated method stub
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        convertView = mInflater.inflate(R.layout.k1_adapter_courselist, null);
+        ArticleItemAdapter.ArticleItem model = mModels.get(position);
+        convertView.setTag(position);
+
+        ImageView courselistImg = (ImageView) convertView.findViewById(R.id.courselistImg);
+        ImageView courselistDraw1 = (ImageView) convertView.findViewById(R.id.courselistDraw1);
+        ImageView courselistDraw2 = (ImageView) convertView.findViewById(R.id.courselistDraw2);
+        ImageView courselistDraw3 = (ImageView) convertView.findViewById(R.id.courselistDraw3);
+        TextView courselistName = (TextView) convertView.findViewById(R.id.courselistName);
+        TextView courselistClassification = (TextView) convertView.findViewById(R.id.courselistClassification);
+        TextView courselistCost = (TextView) convertView.findViewById(R.id.courselistCost);
+        TextView courselistBuyNumber = (TextView) convertView.findViewById(R.id.courselistBuyNumber);
+        View viewLine = (View) convertView.findViewById(R.id.viewLine);
+
+        if(model.thumb != null && !model.thumb.isEmpty()){
+            Picasso.with(convertView.getContext()).load(model.thumb).placeholder(R.drawable.icon1_default).into(courselistImg);
+        } else {
+            Picasso.with(convertView.getContext()).load(R.drawable.icon1_default).into(courselistImg);
+        }
+        courselistName.setText(model.title);
+        courselistClassification.setText(model.categoryTitle);
+        //价格
+        if(model.type == 0){
+            courselistCost.setText("免费");
+        } else if(model.type == 1)
+        {
+            courselistCost.setText("¥" + ToolUtil.doubleToString(model.price));
+            courselistBuyNumber.setText(model.reading + "人已阅读");
+        }
+        else if(model.type == 2){
+            courselistCost.setText("¥" + ToolUtil.doubleToString(model.price) + " (会员免费)");
+            courselistBuyNumber.setText(model.reading + "人已阅读");
+        }
+
+        //// TODO: 2017/8/30
+        if(model.contentType == 0){
+            courselistDraw1.setBackgroundResource(R.mipmap.wenzhangicon);
+            courselistDraw2.setVisibility(View.GONE);
+            courselistDraw3.setVisibility(View.GONE);
+        } else if (model.contentType == 1)
+        {
+            courselistDraw1.setBackgroundResource(R.mipmap.music);
+            courselistDraw2.setVisibility(View.GONE);
+            courselistDraw3.setVisibility(View.GONE);
+        }else if(model.contentType == 2){
+            courselistDraw1.setBackgroundResource(R.mipmap.video);
+            courselistDraw2.setVisibility(View.GONE);
+            courselistDraw3.setVisibility(View.GONE);
+        }else if (model.contentType == 3){
+            courselistDraw1.setBackgroundResource(R.mipmap.music);
+            courselistDraw2.setVisibility(View.VISIBLE);
+            courselistDraw2.setBackgroundResource(R.mipmap.wenzhangicon);
+            courselistDraw3.setVisibility(View.GONE);
+        }else if (model.contentType == 4){
+            courselistDraw1.setBackgroundResource(R.mipmap.video);
+            courselistDraw2.setVisibility(View.VISIBLE);
+            courselistDraw2.setBackgroundResource(R.mipmap.wenzhangicon);
+            courselistDraw3.setVisibility(View.GONE);
+        }else if (model.contentType == 5){
+            courselistDraw1.setBackgroundResource(R.mipmap.video);
+            courselistDraw2.setVisibility(View.VISIBLE);
+            courselistDraw2.setBackgroundResource(R.mipmap.music);
+            courselistDraw3.setVisibility(View.GONE);
+        }else if (model.contentType == 6){
+            courselistDraw1.setBackgroundResource(R.mipmap.video);
+            courselistDraw2.setVisibility(View.VISIBLE);
+            courselistDraw2.setBackgroundResource(R.mipmap.music);
+            courselistDraw3.setVisibility(View.VISIBLE);
+            courselistDraw3.setBackgroundResource(R.mipmap.wenzhangicon);
+        }
+
+        return convertView;
+    }
+}

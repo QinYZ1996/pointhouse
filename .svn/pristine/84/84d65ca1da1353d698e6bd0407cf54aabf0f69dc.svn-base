@@ -1,0 +1,398 @@
+package com.pointhouse.chiguan.common.jsonObject;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by ljj on 2017/8/2.
+ */
+
+public class TeacherDetailGetBean {
+
+    JSONObject json;
+
+    private Boolean hasError = true;
+
+    public Boolean gethasError() {
+        return hasError;
+    }
+
+    public void sethasError(Boolean hasError) {
+        this.hasError = hasError;
+    }
+
+    public TeacherDetailGetBean(String str){
+        JSONTokener jsonParser = new JSONTokener(str);
+        try {
+            json = (JSONObject) jsonParser.nextValue();
+            if(json.getInt("resultCode") == 1){
+                hasError = false;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ResultObjectBean.TeacherBean getTeacherBean() {
+        if(hasError) return null;
+
+        try {
+            return new Gson().fromJson(json.getJSONObject("resultObject").getString("teacher"), ResultObjectBean.TeacherBean.class);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public List<ResultObjectBean.CoursesBean> getCoursesBeanList() {
+        if(hasError) return null;
+
+        Type listType = new TypeToken<ArrayList<ResultObjectBean.CoursesBean>>() {
+        }.getType();
+
+        List<ResultObjectBean.CoursesBean> list = null;
+        try {
+            list = new Gson().fromJson(json.getJSONObject("resultObject").getString("courses"), listType);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+
+    /**
+     * exceptions : [{"id":" ","message":"该老师不存在！"}]
+     * messages : []
+     * resultCode : 1
+     * resultObject : {"courses":[{"categoryId":6,"categoryTitle":"课程分类一","id":1,"kvThumb":"KV缩略图","lessonNum":10,"lessonType":0,"price":12,"studentNum":12,"thumb":"课程缩略图","title":"DEMO课程","type":0}],"teacher":{"avatar":"头像地址","background":"图片地址","country":"中国","createDatetime":"2017-07-18 16:26:24.0","id":1,"mobile":"13234070000","nickname":"DEMO昵称","resume":"DEMO简介","vip":1,"vipEndDate":"2017-07-18 16:26:24.0(vip截止日期)"}}
+     */
+
+    private int resultCode;
+    private ResultObjectBean resultObject;
+    private List<ExceptionsBean> exceptions;
+    private List<?> messages;
+
+    public int getResultCode() {
+        return resultCode;
+    }
+
+    public void setResultCode(int resultCode) {
+        this.resultCode = resultCode;
+    }
+
+    public ResultObjectBean getResultObject() {
+        return resultObject;
+    }
+
+    public void setResultObject(ResultObjectBean resultObject) {
+        this.resultObject = resultObject;
+    }
+
+    public List<ExceptionsBean> getExceptions() {
+        return exceptions;
+    }
+
+    public void setExceptions(List<ExceptionsBean> exceptions) {
+        this.exceptions = exceptions;
+    }
+
+    public List<?> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<?> messages) {
+        this.messages = messages;
+    }
+
+    public static class ResultObjectBean {
+        /**
+         * courses : [{"categoryId":6,"categoryTitle":"课程分类一","id":1,"kvThumb":"KV缩略图","lessonNum":10,"lessonType":0,"price":12,"studentNum":12,"thumb":"课程缩略图","title":"DEMO课程","type":0}]
+         * teacher : {"avatar":"头像地址","background":"图片地址","country":"中国","createDatetime":"2017-07-18 16:26:24.0","id":1,"mobile":"13234070000","nickname":"DEMO昵称","resume":"DEMO简介","vip":1,"vipEndDate":"2017-07-18 16:26:24.0(vip截止日期)"}
+         */
+
+        private TeacherBean teacher;
+        private List<CoursesBean> courses;
+
+        public TeacherBean getTeacher() {
+            return teacher;
+        }
+
+        public void setTeacher(TeacherBean teacher) {
+            this.teacher = teacher;
+        }
+
+        public List<CoursesBean> getCourses() {
+            return courses;
+        }
+
+        public void setCourses(List<CoursesBean> courses) {
+            this.courses = courses;
+        }
+
+        public static class TeacherBean {
+            /**
+             * avatar : 头像地址
+             * background : 图片地址
+             * country : 中国
+             * createDatetime : 2017-07-18 16:26:24.0
+             * id : 1
+             * mobile : 13234070000
+             * nickname : DEMO昵称
+             * resume : DEMO简介
+             * vip : 1
+             * vipEndDate : 2017-07-18 16:26:24.0(vip截止日期)
+             */
+
+            private String avatar;
+            private String background;
+            private String country;
+            private String createDatetime;
+            private int id;
+            private String mobile;
+            private String nickname;
+            private String resume;
+            private int vip;
+            private String vipEndDate;
+
+            public String getAvatar() {
+                return avatar;
+            }
+
+            public void setAvatar(String avatar) {
+                this.avatar = avatar;
+            }
+
+            public String getBackground() {
+                return background;
+            }
+
+            public void setBackground(String background) {
+                this.background = background;
+            }
+
+            public String getCountry() {
+                return country;
+            }
+
+            public void setCountry(String country) {
+                this.country = country;
+            }
+
+            public String getCreateDatetime() {
+                return createDatetime;
+            }
+
+            public void setCreateDatetime(String createDatetime) {
+                this.createDatetime = createDatetime;
+            }
+
+            public int getId() {
+                return id;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public String getMobile() {
+                return mobile;
+            }
+
+            public void setMobile(String mobile) {
+                this.mobile = mobile;
+            }
+
+            public String getNickname() {
+                return nickname;
+            }
+
+            public void setNickname(String nickname) {
+                this.nickname = nickname;
+            }
+
+            public String getResume() {
+                return resume;
+            }
+
+            public void setResume(String resume) {
+                this.resume = resume;
+            }
+
+            public int getVip() {
+                return vip;
+            }
+
+            public void setVip(int vip) {
+                this.vip = vip;
+            }
+
+            public String getVipEndDate() {
+                return vipEndDate;
+            }
+
+            public void setVipEndDate(String vipEndDate) {
+                this.vipEndDate = vipEndDate;
+            }
+        }
+
+        public static class CoursesBean {
+            /**
+             * categoryId : 6
+             * categoryTitle : 课程分类一
+             * id : 1
+             * kvThumb : KV缩略图
+             * lessonNum : 10
+             * lessonType : 0
+             * price : 12
+             * studentNum : 12
+             * thumb : 课程缩略图
+             * title : DEMO课程
+             * type : 0
+             */
+
+            private int categoryId;
+            private String categoryTitle;
+            private int id;
+            private String kvThumb;
+            private int lessonNum;
+            private int lessonType;
+            private double price;
+            private int studentNum;
+            private String thumb;
+            private String title;
+            private int type;
+            private int buyersNum;
+
+            public int getBuyersNum() {
+                return buyersNum;
+            }
+
+            public void setBuyersNum(int buyersNum) {
+                this.buyersNum = buyersNum;
+            }
+
+            public int getCategoryId() {
+                return categoryId;
+            }
+
+            public void setCategoryId(int categoryId) {
+                this.categoryId = categoryId;
+            }
+
+            public String getCategoryTitle() {
+                return categoryTitle;
+            }
+
+            public void setCategoryTitle(String categoryTitle) {
+                this.categoryTitle = categoryTitle;
+            }
+
+            public int getId() {
+                return id;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public String getKvThumb() {
+                return kvThumb;
+            }
+
+            public void setKvThumb(String kvThumb) {
+                this.kvThumb = kvThumb;
+            }
+
+            public int getLessonNum() {
+                return lessonNum;
+            }
+
+            public void setLessonNum(int lessonNum) {
+                this.lessonNum = lessonNum;
+            }
+
+            public int getLessonType() {
+                return lessonType;
+            }
+
+            public void setLessonType(int lessonType) {
+                this.lessonType = lessonType;
+            }
+
+            public double getPrice() {
+                return price;
+            }
+
+            public void setPrice(double price) {
+                this.price = price;
+            }
+
+            public int getStudentNum() {
+                return studentNum;
+            }
+
+            public void setStudentNum(int studentNum) {
+                this.studentNum = studentNum;
+            }
+
+            public String getThumb() {
+                return thumb;
+            }
+
+            public void setThumb(String thumb) {
+                this.thumb = thumb;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public void setTitle(String title) {
+                this.title = title;
+            }
+
+            public int getType() {
+                return type;
+            }
+
+            public void setType(int type) {
+                this.type = type;
+            }
+        }
+    }
+
+    public static class ExceptionsBean {
+        /**
+         * id :
+         * message : 该老师不存在！
+         */
+
+        private String id;
+        private String message;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+    }
+}

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_light"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/background_imageview"
+        android:layout_width="match_parent"
+        android:layout_height="162dp"
+        android:background="@drawable/mine_background_default"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.4"
+            android:background="@color/black"/>
+
+        <RelativeLayout
+            android:id="@+id/go_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="true">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@mipmap/setup"/>
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="75dp"
+                android:orientation="horizontal">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/UserHeadView"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toEndOf="@+id/back_btn"
+                    android:layout_toRightOf="@+id/back_btn"
+                    android:background="@mipmap/headportrait"/>
+                <!--app:civ_border_color="@color/white"-->
+                <!--app:civ_border_width="2dp"-->
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="75dp"
+                android:orientation="vertical"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/loginBtn"
+                        android:textAllCaps="false"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="left|center_vertical"
+                        android:paddingLeft="4dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="#00000000"
+                        android:text="点击登录"
+                        android:textColor="#e9e8e8"
+                        android:textSize="15dp"/>
+
+                    <ImageView
+                        android:id="@+id/personalcenter_vipimage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginLeft="4dp"
+                        android:background="@mipmap/membermark"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center|center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/Ftext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:paddingLeft="4dp"
+                        android:gravity="left|center_vertical"
+                        android:background="#00000000"
+                        android:text="快速登录,专享池馆更好服务"
+                        android:textColor="#e9e8e8"
+                        android:textSize="10.5dp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:id="@+id/FloginBtns"
+                            android:layout_width="60dp"
+                            android:layout_height="match_parent"
+                            android:gravity="top">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="14dp"
+                                android:background="@mipmap/forwardwhite"/>
+                        </RelativeLayout>
+
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/Ftext"
+        >
+
+        <ListView android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/MyListView"
+            android:divider="@null"
+                  android:layout_alignParentTop="true"
+                  android:layout_alignParentLeft="true"
+                  android:layout_alignParentStart="true">
+        </ListView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/t1"
+            android:text="联系方式"
+            android:textSize="10dp"
+            android:textColor="#d6d6d6"
+            android:layout_below="@id/MyListView"
+            android:layout_marginLeft="14dp"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/t2"
+            android:text="QQ号码:2667428845"
+            android:textSize="10dp"
+            android:textColor="#d6d6d6"
+            android:layout_below="@id/t1"
+            android:layout_marginLeft="14dp"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="微信公众号:池馆燕语"
+            android:textSize="10dp"
+            android:textColor="#d6d6d6"
+            android:layout_below="@id/t2"
+            android:layout_marginLeft="14dp"
+            />
+
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

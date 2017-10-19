@@ -1,0 +1,121 @@
+package com.pointhouse.chiguan.w1_2;
+
+import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+
+import com.pointhouse.chiguan.R;
+import com.pointhouse.chiguan.common.base.HttpActivityBase;
+import com.pointhouse.chiguan.common.updatecommon.PullToRefreshBase;
+import com.pointhouse.chiguan.common.updatecommon.PullToRefreshListView;
+
+import org.json.JSONArray;
+
+import okhttp3.Call;
+
+/**
+ * Created by ljj on 2017/9/4.
+ */
+
+public class MyGroupActivity extends HttpActivityBase implements AdapterView.OnItemClickListener, PullToRefreshBase.OnRefreshListener<ListView>{
+    PullToRefreshListView viewGroupList;
+    private ListView mListView;
+    MyGroupAdapter adapter;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.w1_2_activity_mygroup);
+        viewGroupList = (PullToRefreshListView) findViewById(R.id.viewgroupList);
+        viewGroupList.setPullLoadEnabled(false);
+        viewGroupList.setScrollLoadEnabled(false);
+        viewGroupList.setOnRefreshListener(this);
+        mListView = viewGroupList.getRefreshableView();
+        adapter = new MyGroupAdapter(this);
+        mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(this);
+
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put("1");
+        //getAsynHttp(Constant.URL_BASE +"courseList",jsonArray.toString(),null,1);
+
+        LinearLayout backbtnll = (LinearLayout)findViewById(R.id.findBackBtnView);
+        backbtnll.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //当前页面销毁
+                finish();
+                //创建一个事件
+                KeyEvent newEvent = new KeyEvent(KeyEvent.ACTION_DOWN,
+                        KeyEvent.KEYCODE_BACK);
+                //设置activity监听此事件，返回true只监听一次，如果返回false则继续监听
+                onKeyDown(KeyEvent.KEYCODE_BACK, newEvent);
+            }
+        });
+        Button backbtn = (Button)findViewById(R.id.findBackBtn);
+        backbtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //当前页面销毁
+                finish();
+                //创建一个事件
+                KeyEvent newEvent = new KeyEvent(KeyEvent.ACTION_DOWN,
+                        KeyEvent.KEYCODE_BACK);
+                //设置activity监听此事件，返回true只监听一次，如果返回false则继续监听
+                onKeyDown(KeyEvent.KEYCODE_BACK, newEvent);
+            }
+        });
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+    }
+
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+    }
+
+    @Override
+    public void getAsynHttpResponse(Call call, String json, int flg, int error) {
+        if(error == -1) {
+            viewGroupList.onRefreshComplete();
+            return;
+        }
+//        courseListGetBean = new CourseListGetBean(json);
+//        if (courseListGetBean.gethasError()) return;
+//        updateAllDate(flg);
+    }
+
+    private void reload() {
+        adapter.clean();
+        loadDate();
+        if(adapter.getCount() == 0){
+            View listEmptyView = View.inflate(this, R.layout.common_empty,
+                    (ViewGroup) mListView.getParent());
+            mListView.setEmptyView(listEmptyView);
+        }
+        adapter.notifyDataSetChanged();
+        viewGroupList.onRefreshComplete();
+    }
+
+    public void loadDate() {
+//        List<CourseListGetBean.ResultObjectBean.CoursesBean> coursesBeanList = courseListGetBean.getCoursesBeanList();
+//        for(CourseListGetBean.ResultObjectBean.CoursesBean recomenedCourseBean : coursesBeanList){
+//            adapter.addGroup();
+//        }
+    }
+
+    @Override
+    public void postAsynHttpResponse(Call call, String json, int flg) {
+
+    }
+}

@@ -1,0 +1,522 @@
+package com.pointhouse.chiguan.Application;
+
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
+import android.support.multidex.MultiDex;
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.alibaba.fastjson.JSONObject;
+import com.mob.MobSDK;
+import com.netease.nim.demo.DemoCache;
+import com.netease.nim.demo.config.preference.Preferences;
+import com.netease.nim.demo.config.preference.UserPreferences;
+import com.netease.nim.demo.session.SessionHelper;
+import com.netease.nim.uikit.NimUIKit;
+import com.netease.nim.uikit.custom.DefaultUserInfoProvider;
+import com.netease.nim.uikit.session.viewholder.MsgViewHolderThumbBase;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.SDKOptions;
+import com.netease.nimlib.sdk.StatusBarNotificationConfig;
+import com.netease.nimlib.sdk.auth.LoginInfo;
+import com.netease.nimlib.sdk.msg.MessageNotifierCustomization;
+import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.pointhouse.chiguan.R;
+import com.pointhouse.chiguan.common.http.RetrofitFactory;
+import com.pointhouse.chiguan.common.sqlite.util.DatabaseHelper;
+import com.pointhouse.chiguan.common.util.CollectionUtil;
+import com.pointhouse.chiguan.common.util.Constant;
+import com.pointhouse.chiguan.common.util.MediaServiceHelper;
+import com.pointhouse.chiguan.common.util.SharedPreferencesUtil;
+import com.pointhouse.chiguan.common.util.SystemUtil;
+import com.pointhouse.chiguan.common.util.ToastUtil;
+import com.pointhouse.chiguan.db.StudyInfo;
+import com.pointhouse.chiguan.db.StudyInfoDao;
+import com.pointhouse.chiguan.db.UserInfo;
+import com.netease.nim.demo.common.util.sys.GroupMsgUtil;
+import com.pointhouse.chiguan.h1.NotifyActivity;
+import com.pointhouse.chiguan.k1_2.DownloadService;
+import com.pointhouse.chiguan.w1.PersonalCenterActivity;
+import com.pointhouse.chiguan.w1_1.MyPurchaseActivity;
+import com.pointhouse.chiguan.w1_13.MyMemberActivity;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import cn.jpush.android.api.JPushInterface;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
+/**
+ * Created by PC-sunjb on 2017/6/23.
+ */
+
+public class GlobalApplication extends Application {
+
+    public static String fromid;
+
+    //全局主页面(我的)
+    public static PersonalCenterActivity personalCenterActivity;
+
+    //登陆类型，默认0未登陆，1手机登陆，2微信登录
+    public static int LoginType = 0;
+
+    public static Context sContext;//全局的Context对象
+    //是第三方app和微信通信的openapi接口
+    public static IWXAPI wxapi;
+    public static UserInfo user = new UserInfo();
+    //全局获取resource
+    private static Resources resources;
+
+    public static Resources getAppResources() {
+        return resources;
+    }
+
+    //Activity管理
+    private ActivityManager mActivityManager;
+    private String TAG = "GlobalApplication";
+    //试图所属类集合
+    public List<String> ActivityList = new ArrayList<>();
+    //token
+    public static String REGISTRATION_ID = "";
+    //scheme uri
+    public static final String scheme_uri = "chiguan://pointhouse:8888/";
+    //微信OPENID
+    public static String openid = "";
+    //微信ACCESS_TOKEN
+    public static String access_token = "";
+    //微信昵称
+    public static String wxnickname = "";
+
+    //微信绑定、登陆判断 0微信登录,1绑定微信
+    public static int BandweChat = 0;
+
+    //mini播放器offset页面
+    private String[] upFloat = {"t1.FatherActivity"};
+
+    //待购买id(支付专用不要赋值)
+    public static int waitPayId = -1;
+    //是否是课程(支付专用不要赋值)
+    public static int isCourse = -1;
+    //群ID(支付专用不要赋值)
+    //public static String tid = "";
+
+    public void onCreate() {
+        Log.d(TAG, "onCreate");
+        super.onCreate();
+        sContext = this;
+
+        CrashHandler crashHandler = CrashHandler.getInstance();
+        crashHandler.init(this);
+
+        JPushInterface.setDebugMode(true);     // 设置开启日志,发布时请关闭日志
+        JPushInterface.init(this);             // 初始化 JPush
+        JPushInterface.setLatestNotificationNumber(this, 5);//设置最近保留的通知条数
+
+        // 注册SHARESDK
+//        MobSDK.init(context, "你的AppKey", "你的AppSecret");
+        MobSDK.init(this, "1f7e0d8c253ae", "e9c6c9e472ea0fdabf303c85049c48bc");
+
+        //下载初期化
+        startService(new Intent(this, DownloadService.class));
+
+        //初始化云信
+        DemoCache.setContext(this);
+        //群聊
+        NIMClient.init(this, getLoginInfo(), getOptions());
+        if (inMainProcess()) {
+            initUiKit();
+        }
+
+        initActivitylist();
+
+        //初始化网络框架
+        RetrofitFactory.resetRetrofitFactory(SharedPreferencesUtil.readToken(this));
+
+        CheckSDK();
+        resources = getResources();
+        //注册微信
+        registToWX();
+        DatabaseHelper.getHelper(this);
+
+        //上传学习进度
+        upLoadStudy();
+
+        if (MediaServiceHelper.hasPermission(this)) {
+            Intent intent = new Intent(getApplicationContext(), MediaService.class);
+            startService(intent);
+        }
+
+        mActivityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+        //监听Activity状态变化
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+                Log.i(TAG, "onActivityCreated:" + activity.getLocalClassName());
+                if (!MediaServiceHelper.hasPermission(GlobalApplication.this)) {
+                    return;
+                }
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+                Log.i(TAG, "onActivityStarted:" + activity.getLocalClassName());
+                for (int i = 0; i < ActivityList.size(); i++) {
+                    if (activity.getLocalClassName().equals(ActivityList.get(i))) {
+                        if (GlobalApplication.user.getMobile() == null && GlobalApplication.user.getOpenid() == null) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(scheme_uri + "l1"));
+                            ToastUtil.getToast(getApplicationContext(), "请先登录后再操作", "center", 0, 180).show();
+                            startActivity(intent);
+                            break;
+                        }
+                    }
+                }
+                if (!MediaServiceHelper.hasPermission(GlobalApplication.this)) {
+                    return;
+                }
+                //TODO:回到前台
+                //群聊不显示
+                if(activity.getLocalClassName().matches("com.netease.nim.+")){
+                    MediaServiceHelper.getService(getApplicationContext(), MediaService::backGroundHide);
+                    return;
+                }
+
+                //分享画面弹出不显示
+                if(activity.getLocalClassName().equals("com.mob.tools.MobUIShell")){
+                    return;
+                }
+
+                //不论是否由后台回归还是启动,都刷新显示状态
+                MediaServiceHelper.getService(getApplicationContext(), MediaService::reFleshDisplay);
+                if (isUpFloat(activity.getLocalClassName())) {
+                    MediaServiceHelper.getService(getApplicationContext(), mediaService -> mediaService.setXY(null, 50f));
+                } else {
+                    MediaServiceHelper.getService(getApplicationContext(), mediaService -> mediaService.setXY(null, 0f));
+                }
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                Log.i("GlobalApplication", "onActivityResumed:" + activity.getLocalClassName());
+                if (!MediaServiceHelper.hasPermission(GlobalApplication.this)) {
+                    return;
+                }
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+                Log.i(TAG, "onActivityPaused:" + activity.getLocalClassName());
+                if (!MediaServiceHelper.hasPermission(GlobalApplication.this)) {
+                    return;
+                }
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+                Log.i(TAG, "onActivityStopped:" + activity.getLocalClassName());
+                if (!MediaServiceHelper.hasPermission(GlobalApplication.this)) {
+                    return;
+                }
+                //TODO:进入后台
+                if (!isAppBackground()) {
+                    MediaServiceHelper.getService(getApplicationContext(), MediaService::backGroundHide);
+                }
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+                Log.i(TAG, "onActivitySaveInstanceState:" + activity.getLocalClassName());
+                if (!MediaServiceHelper.hasPermission(GlobalApplication.this)) {
+                    return;
+                }
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+                Log.i(TAG, "onActivityDestroyed:" + activity.getLocalClassName());
+                if (!MediaServiceHelper.hasPermission(GlobalApplication.this)) {
+                    return;
+                }
+            }
+        });
+    }
+
+
+    //定义通知栏样式
+//    private void receivingNotification() {
+//        CustomPushNotificationBuilder builder = new CustomPushNotificationBuilder(this, R.layout.customer_notitfication_layout, R.id.icon, R.id.title, R.id.text);
+//        builder.layoutIconDrawable = R.drawable.ic_launcher;
+//        builder.developerArg0 = "developerArg2";
+//        JPushInterface.setPushNotificationBuilder(2, builder);
+//    }
+
+    private void registToWX() {
+        //AppConst.WEIXIN.APP_ID是指你应用在微信开放平台上的AppID，记得替换。
+        wxapi = WXAPIFactory.createWXAPI(this, Constant.WX_APP_ID, false); //
+        // 将该app注册到微信
+        wxapi.registerApp(Constant.WX_APP_ID);
+    }
+
+    //上传学习进度
+    private void upLoadStudy() {
+        try {
+            if (!Constant.APP_PACKAGE.equals(getAppName(android.os.Process.myPid()))) {//防止二次发送
+                return;
+            }
+            StudyInfoDao studyInfoDao = new StudyInfoDao(this);
+            List<StudyInfo> all = studyInfoDao.getAll();
+            List<StudyUpload> upList = new ArrayList<>();
+            if (!CollectionUtil.isEmpty(all)) {
+                for (StudyInfo studyInfo : all) {
+                    StudyUpload.ProcessDetail processDetail = new StudyUpload.ProcessDetail(studyInfo);
+                    boolean flag = false;
+                    for (StudyUpload sul : upList) {
+                        if (sul.getCourseId().equals(String.valueOf(studyInfo.getCourseId()))) {
+                            if (!sul.getLessonId().equals(String.valueOf(studyInfo.getLessonId()))) {//每专辑只取最新一课
+                                flag = true;
+                                break;
+                            }
+                            if (CollectionUtil.isEmpty(sul.getProcessDetail())) {
+                                sul.setProcessDetail(new ArrayList<>());
+                            }
+                            sul.getProcessDetail().add(processDetail);
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if (!flag) {
+                        StudyUpload sul = new StudyUpload(studyInfo);
+                        if (CollectionUtil.isEmpty(sul.getProcessDetail())) {
+                            sul.setProcessDetail(new ArrayList<>());
+                        }
+                        sul.getProcessDetail().add(processDetail);
+                        upList.add(sul);
+                    }
+                }
+                List<List<StudyUpload>> container = new ArrayList<>();
+                container.add(upList);
+                Log.d(TAG, JSONObject.toJSONString(container));
+                RetrofitFactory.getInstance().getRequestServicesToken()
+                        .post("learnProcess", RetrofitFactory.createRequestBody(JSONObject.toJSONString(container)))
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(jsonObject -> {
+                            Log.d(TAG, jsonObject.toJSONString());
+                        }, throwable -> {
+                            throwable.printStackTrace();
+                            Log.e(TAG, throwable.getMessage());
+                        })
+                ;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //根据pid获取进程名
+    private String getAppName(int pID) {
+        String processName = "";
+        ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
+        List l = am.getRunningAppProcesses();
+        Iterator i = l.iterator();
+        PackageManager pm = this.getPackageManager();
+        while (i.hasNext()) {
+            ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo) (i.next());
+            try {
+                if (info.pid == pID) {
+                    CharSequence c = pm.getApplicationLabel(pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
+                    processName = info.processName;
+                }
+            } catch (Exception e) {
+                Log.d(TAG, e.getMessage());
+            }
+        }
+        return processName;
+    }
+
+    public void initActivitylist() {
+        this.ActivityList.add(MyMemberActivity.class.toString());
+        this.ActivityList.add(MyPurchaseActivity.class.toString());
+    }
+
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+
+    /**
+     * 应用是否在前台
+     *
+     * @return true:回到前台;false:进入后台
+     */
+    private boolean isAppBackground() {
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = mActivityManager.getRunningAppProcesses();
+        if (appProcesses == null) return false;
+
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            // The name of the process that this object is associated with.
+            if (appProcess.processName.equals(getApplicationContext().getPackageName())
+                    && appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //网易IM初始化
+    private void initUiKit() {
+
+        // 初始化
+        NimUIKit.init(this);
+        // 可选定制项
+        // 注册定位信息提供者类（可选）,如果需要发送地理位置消息，必须提供。
+        // demo中使用高德地图实现了该提供者，开发者可以根据自身需求，选用高德，百度，google等任意第三方地图和定位SDK。
+//        NimUIKit.setLocationProvider(new NimDemoLocationProvider());
+
+        // 会话窗口的定制: 示例代码可详见demo源码中的SessionHelper类。
+        // 1.注册自定义消息附件解析器（可选）
+        // 2.注册各种扩展消息类型的显示ViewHolder（可选）
+        // 3.设置会话中点击事件响应处理（一般需要）
+        SessionHelper.init();
+
+        // 通讯录列表定制：示例代码可详见demo源码中的ContactHelper类。
+        // 1.定制通讯录列表中点击事响应处理（一般需要，UIKit 提供默认实现为点击进入聊天界面)
+//        ContactHelper.init();
+    }
+
+    //网易IM获取登录信息
+    private LoginInfo getLoginInfo() {
+        String account = Preferences.getUserAccount();
+        String token = Preferences.getUserToken();
+        if (!TextUtils.isEmpty(account) && !TextUtils.isEmpty(token)) {
+            DemoCache.setAccount(account.toLowerCase());
+            return new LoginInfo(account, token);
+        } else {
+            return null;
+        }
+    }
+
+    //网易IM获取配置信息
+    private SDKOptions getOptions() {
+        SDKOptions options = new SDKOptions();
+
+        // 如果将新消息通知提醒托管给SDK完成，需要添加以下配置。
+        initStatusBarNotificationConfig(options);
+
+        // 配置保存图片，文件，log等数据的目录
+        options.sdkStorageRootPath = Environment.getExternalStorageDirectory() + "/" + getPackageName() + "/nim";
+
+        // 配置数据库加密秘钥
+        options.databaseEncryptKey = "NETEASE";
+
+        // 配置是否需要预下载附件缩略图
+        options.preloadAttach = true;
+
+        // 配置附件缩略图的尺寸大小，
+        options.thumbnailSize = MsgViewHolderThumbBase.getImageMaxEdge();
+
+        // 用户信息提供者
+        options.userInfoProvider = new DefaultUserInfoProvider(this);
+
+        // 定制通知栏提醒文案（可选，如果不定制将采用SDK默认文案）
+//        options.messageNotifierCustomization = messageNotifierCustomization;
+
+        // 在线多端同步未读数
+        options.sessionReadAck = true;
+
+        // 云信私有化配置项
+        //configServerAddress(options);
+        return options;
+    }
+
+
+    //判断是否在主线程
+    public boolean inMainProcess() {
+        String packageName = getPackageName();
+        String processName = SystemUtil.getProcessName(this);
+        return packageName.equals(processName);
+    }
+
+
+    /**
+     * 判断sdk版本
+     */
+    public void CheckSDK() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+        }
+    }
+
+    //判断Activity是否需要上浮
+    private boolean isUpFloat(String activityName) {
+        for (String str : upFloat) {
+            if (str.equals(activityName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //网易聊天消息推送
+    private void initStatusBarNotificationConfig(SDKOptions options) {
+        // load 应用的状态栏配置
+        StatusBarNotificationConfig config = loadStatusBarNotificationConfig();
+
+        // load 用户的 StatusBarNotificationConfig 设置项
+        StatusBarNotificationConfig userConfig = UserPreferences.getStatusConfig();
+        if (userConfig == null) {
+            userConfig = config;
+        } else {
+            // 新增的 UserPreferences 存储项更新，兼容 3.4 及以前版本
+            // 新增 notificationColor 存储，兼容3.6以前版本
+            // APP默认 StatusBarNotificationConfig 配置修改后，使其生效
+            userConfig.notificationEntrance = config.notificationEntrance;
+            userConfig.notificationFolded = config.notificationFolded;
+            userConfig.notificationColor = getResources().getColor(R.color.color_blue_3a9efb);
+        }
+        // 持久化生效
+        UserPreferences.setStatusConfig(userConfig);
+        // SDK statusBarNotificationConfig 生效
+        options.statusBarNotificationConfig = userConfig;
+    }
+
+    // 这里开发者可以自定义该应用初始的 StatusBarNotificationConfig
+    private StatusBarNotificationConfig loadStatusBarNotificationConfig() {
+        StatusBarNotificationConfig config = new StatusBarNotificationConfig();
+        // 点击通知需要跳转到的界面
+        config.notificationEntrance = NotifyActivity.class;
+        config.notificationSmallIconId = R.drawable.ic_stat_notify_msg;
+        config.notificationColor = getResources().getColor(R.color.color_blue_3a9efb);
+        // 通知铃声的uri字符串
+        config.notificationSound = "android.resource://com.netease.nim.demo/raw/msg";
+
+        // 呼吸灯配置
+        config.ledARGB = Color.GREEN;
+        config.ledOnMs = 1000;
+        config.ledOffMs = 1500;
+
+        config.notificationFolded=false;
+
+        // save cache，留做切换账号备用
+        DemoCache.setNotificationConfig(config);
+        return config;
+    }
+}

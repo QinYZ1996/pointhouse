@@ -1,0 +1,403 @@
+package com.pointhouse.chiguan.common.jsonObject;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by gyh on 2017/8/4.
+ */
+
+public class MyOrderListGetBean {
+
+    private JSONObject json;
+    private boolean hasError = true;
+    /**
+     * exceptions : [{"id":" ","message":"该老师不存在！"}]
+     * messages : []
+     * resultCode : 1
+     * resultObject : [{"date":"2017年6月30日","courses":[{"categoryId":6,"categoryTitle":"课程分类一","id":1,"lessonNum":10,"lessonType":0,"price":12,"studentNum":12,"thumb":"http://pic.58pic.com/58pic/16/69/41/53G58PICn6P_1024.jpg","title":"DEMO课程","type":0}],"acticle":[{"categoryId":6,"categoryTitle":"文章分类二","id":2,"favoriteNum":10,"contentType":0,"price":12,"buyersNum":12,"reading":12,"thumb":"http://pic.58pic.com/58pic/16/69/41/53G58PICn6P_1024.jpg","title":"DEMO文章","type":0}]},{"date":"2017年6月25日","courses":[],"acticle":[]},{"date":"2017年6月21","courses":[],"acticle":[]}]
+     */
+
+    private int resultCode;
+    private List<ExceptionsBean> exceptions;
+    private List<?> messages;
+    private List<ResultObjectBean> resultObject;
+
+    public Boolean hasError() {
+        return hasError;
+    }
+
+    public MyOrderListGetBean(String str) {
+        JSONTokener jsonParser = new JSONTokener(str);
+        try {
+            json = (JSONObject) jsonParser.nextValue();
+            resultCode = json.getInt("resultCode");
+            if (resultCode == 1) {
+                hasError = false;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<ResultObjectBean> getResultObjectBeanList() {
+        if (hasError) return null;
+
+        List<ResultObjectBean> list = new ArrayList<>();
+        try {
+            list.addAll(new Gson().fromJson(json.getString("resultObject"), new TypeToken<List<ResultObjectBean>>() {
+            }.getType()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public ExceptionsBean getExceptionsBean() {
+        if (!hasError) return null;
+
+        List<ExceptionsBean> list = new ArrayList<>();
+        try {
+            list = new Gson().fromJson(json.getString("exceptions"), new TypeToken<ExceptionsBean>() {
+            }.getType());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return list.size() > 0 ? list.get(0) : new ExceptionsBean();
+    }
+
+    public int getResultCode() {
+        return resultCode;
+    }
+
+    public void setResultCode(int resultCode) {
+        this.resultCode = resultCode;
+    }
+
+    public List<ExceptionsBean> getExceptions() {
+        return exceptions;
+    }
+
+    public void setExceptions(List<ExceptionsBean> exceptions) {
+        this.exceptions = exceptions;
+    }
+
+    public List<?> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<?> messages) {
+        this.messages = messages;
+    }
+
+    public List<ResultObjectBean> getResultObject() {
+        return resultObject;
+    }
+
+    public void setResultObject(List<ResultObjectBean> resultObject) {
+        this.resultObject = resultObject;
+    }
+
+
+    public static class ExceptionsBean {
+        /**
+         * id :
+         * message : 该老师不存在！
+         */
+
+        private String id;
+        private String message;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+    }
+
+    public static class ResultObjectBean {
+        /**
+         * date : 2017年6月30日
+         * courses : [{"categoryId":6,"categoryTitle":"课程分类一","id":1,"lessonNum":10,"lessonType":0,"price":12,"studentNum":12,"thumb":"http://pic.58pic.com/58pic/16/69/41/53G58PICn6P_1024.jpg","title":"DEMO课程","type":0}]
+         * acticle : [{"categoryId":6,"categoryTitle":"文章分类二","id":2,"favoriteNum":10,"contentType":0,"price":12,"buyersNum":12,"reading":12,"thumb":"http://pic.58pic.com/58pic/16/69/41/53G58PICn6P_1024.jpg","title":"DEMO文章","type":0}]
+         */
+
+        private String date;
+        private List<CourseBean> course;
+        private List<ActicleBean> acticle;
+
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
+        public List<CourseBean> getCourse() {
+            return course;
+        }
+
+        public void setCourse(List<CourseBean> course) {
+            this.course = course;
+        }
+
+        public List<ActicleBean> getActicle() {
+            return acticle;
+        }
+
+        public void setActicle(List<ActicleBean> acticle) {
+            this.acticle = acticle;
+        }
+
+        public static class CourseBean {
+            /**
+             * categoryId : 6
+             * categoryTitle : 课程分类一
+             * id : 1
+             * lessonNum : 10
+             * lessonType : 0
+             * price : 12
+             * studentNum : 12
+             * thumb : http://pic.58pic.com/58pic/16/69/41/53G58PICn6P_1024.jpg
+             * title : DEMO课程
+             * type : 0
+             */
+
+            private int categoryId;
+            private String categoryTitle;
+            private int id;
+            private int lessonNum;
+            private int buyersNum;
+            private int lessonType;
+            private double price;
+            private int studentNum;
+            private String thumb;
+            private String title;
+            private int type;
+
+            public int getCategoryId() {
+                return categoryId;
+            }
+
+            public void setCategoryId(int categoryId) {
+                this.categoryId = categoryId;
+            }
+
+            public String getCategoryTitle() {
+                return categoryTitle;
+            }
+
+            public void setCategoryTitle(String categoryTitle) {
+                this.categoryTitle = categoryTitle;
+            }
+
+            public int getId() {
+                return id;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public int getLessonNum() {
+                return lessonNum;
+            }
+
+            public void setLessonNum(int lessonNum) {
+                this.lessonNum = lessonNum;
+            }
+
+            public int getLessonType() {
+                return lessonType;
+            }
+
+            public void setLessonType(int lessonType) {
+                this.lessonType = lessonType;
+            }
+
+            public double getPrice() {
+                return price;
+            }
+
+            public void setPrice(double price) {
+                this.price = price;
+            }
+
+            public int getStudentNum() {
+                return studentNum;
+            }
+
+            public void setStudentNum(int studentNum) {
+                this.studentNum = studentNum;
+            }
+
+            public String getThumb() {
+                return thumb;
+            }
+
+            public void setThumb(String thumb) {
+                this.thumb = thumb;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public void setTitle(String title) {
+                this.title = title;
+            }
+
+            public int getType() {
+                return type;
+            }
+
+            public void setType(int type) {
+                this.type = type;
+            }
+
+            public int getBuyersNum() {
+                return buyersNum;
+            }
+
+            public void setBuyersNum(int buyersNum) {
+                this.buyersNum = buyersNum;
+            }
+        }
+
+        public static class ActicleBean {
+            /**
+             * categoryId : 6
+             * categoryTitle : 文章分类二
+             * id : 2
+             * favoriteNum : 10
+             * contentType : 0
+             * price : 12
+             * buyersNum : 12
+             * reading : 12
+             * thumb : http://pic.58pic.com/58pic/16/69/41/53G58PICn6P_1024.jpg
+             * title : DEMO文章
+             * type : 0
+             */
+
+            private int categoryId;
+            private String categoryTitle;
+            private int id;
+            private int favoriteNum;
+            private int contentType;
+            private double price;
+            private int buyersNum;
+            private int reading;
+            private String thumb;
+            private String title;
+            private int type;
+
+            public int getCategoryId() {
+                return categoryId;
+            }
+
+            public void setCategoryId(int categoryId) {
+                this.categoryId = categoryId;
+            }
+
+            public String getCategoryTitle() {
+                return categoryTitle;
+            }
+
+            public void setCategoryTitle(String categoryTitle) {
+                this.categoryTitle = categoryTitle;
+            }
+
+            public int getId() {
+                return id;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public int getFavoriteNum() {
+                return favoriteNum;
+            }
+
+            public void setFavoriteNum(int favoriteNum) {
+                this.favoriteNum = favoriteNum;
+            }
+
+            public int getContentType() {
+                return contentType;
+            }
+
+            public void setContentType(int contentType) {
+                this.contentType = contentType;
+            }
+
+            public double getPrice() {
+                return price;
+            }
+
+            public void setPrice(double price) {
+                this.price = price;
+            }
+
+            public int getBuyersNum() {
+                return buyersNum;
+            }
+
+            public void setBuyersNum(int buyersNum) {
+                this.buyersNum = buyersNum;
+            }
+
+            public int getReading() {
+                return reading;
+            }
+
+            public void setReading(int reading) {
+                this.reading = reading;
+            }
+
+            public String getThumb() {
+                return thumb;
+            }
+
+            public void setThumb(String thumb) {
+                this.thumb = thumb;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public void setTitle(String title) {
+                this.title = title;
+            }
+
+            public int getType() {
+                return type;
+            }
+
+            public void setType(int type) {
+                this.type = type;
+            }
+        }
+    }
+}

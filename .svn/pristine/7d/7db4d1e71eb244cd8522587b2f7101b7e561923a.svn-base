@@ -1,0 +1,140 @@
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+android {
+    compileSdkVersion 25
+    buildToolsVersion "26.0.0"
+    defaultConfig {
+        applicationId "com.pointhouse.chiguan"
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 12
+        versionName "0.65"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "mips", "mips64",      "x86", "x86_64"
+        }
+
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : applicationId,
+                JPUSH_APPKEY : "1191c2c739a904810e5b5a56", //JPush上注册的包名对应的appkey.
+                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+        ]
+    }
+
+
+    signingConfigs {
+        debug {
+            storeFile file('../pointhouse.jks')//签名文件路径
+            storePassword "pointhouse"
+            keyAlias "pointhouse"
+            keyPassword "pointhouse"  //签名密码
+            println("====== signingConfigs.debug ======")
+        }
+        release {
+            storeFile file('../pointhouse.jks')//签名文件路径
+            storePassword "pointhouse"
+            keyAlias "pointhouse"
+            keyPassword "pointhouse"  //签名密码
+            println("====== signingConfigs.release ======")
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    //添加如下配置就ok了
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+
+
+    sourceSets{
+        main{
+            jniLibs.srcDirs=['libs']
+        }
+    }
+}
+
+retrolambda {
+    javaVersion JavaVersion.VERSION_1_6
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    //代码分包
+    compile 'com.android.support:multidex:1.0.1'
+    //网易IM
+    compile project(path: ':nim')
+    //微信登录集成
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.1.6'
+    testCompile 'junit:junit:4.12'
+    //ORMLite数据库对象关系映射
+    compile 'com.j256.ormlite:ormlite-android:4.48'
+    //SQLite测试工具
+    debugCompile 'com.amitshekhar.android:debug-db:1.0.1'
+    //retrofit网络连接
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
+    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    compile 'io.reactivex.rxjava2:rxjava:2.1.1'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile group: 'com.jakewharton.rxbinding2', name: 'rxbinding', version: '2.0.0'
+    compile ('org.ligboy.retrofit2:converter-fastjson-android:2.1.0',{
+        exclude group:'com.alibaba',module:'fastjson'
+    })
+    //图片缓存
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    //lambda支持
+    retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
+    //Parcelable注解配置
+    provided 'com.baoyz.pg:compiler:2.1.1'
+    compile 'com.baoyz.pg:core:2.1.1'
+    //极光推送配置
+    compile 'cn.jiguang.sdk:jpush:3.0.0'
+    // 此处以JPush 3.0.0 版本为例。
+    compile 'cn.jiguang.sdk:jcore:1.0.0'
+    // 此处以JCore 1.0.0 版本为例。
+    //JSON转换工具
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.0.pr4'
+    compile 'org.jsoup:jsoup:1.10.3'
+    //支付宝
+    compile files('libs/alipaySingle-20170510.jar')
+
+    //自定义imageview
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+
+
+    //required, enough for most devices.
+    compile 'tv.danmaku.ijk.media:ijkplayer-java:0.8.0'
+    compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.0'
+    //Other ABIs: optional
+    compile 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.0'
+
+    //gif
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
+    //google EasyPermissions
+    compile 'pub.devrel:easypermissions:0.4.3'
+
+}

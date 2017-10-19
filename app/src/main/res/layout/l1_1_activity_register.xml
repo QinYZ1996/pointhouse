@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:gravity="left">
+
+        <RelativeLayout
+            android:id="@+id/regBackBtn"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:onClick="Reg_back"
+            android:layout_marginLeft="13dp">
+            <Button
+                android:id="@+id/reg_allback_btn"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="14dp"
+                android:layout_width="10dp"
+                android:layout_height="18dp"
+                android:onClick="Reg_back"
+                android:background="@mipmap/backblack"/>
+        </RelativeLayout>
+
+
+
+        <TextView
+            android:id="@+id/custom_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="19dp"
+            android:text="手机注册"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColor="#000000" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2.5dp"
+        android:layout_marginTop="0.5dp"
+        android:layout_gravity="center_vertical|left"
+        android:background="#f2f3f4"
+        />
+
+    <LinearLayout
+        android:id="@+id/phoneLine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="34dp"
+        android:layout_marginRight="34dp"
+        android:layout_marginTop="35dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/phoneText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="10"
+            android:background="@null"
+            android:hint="请输入手机号"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:textColor="#c7c7c7"
+            android:textColorHint="#c7c7c7"
+            android:textSize="15dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/timepick"
+                android:layout_width="27.5dp"
+                android:layout_height="25dp"
+                android:layout_alignRight="@id/phoneText"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical|bottom"
+                android:layout_marginRight="-5dp"
+                android:layout_weight="1"
+                android:background="@mipmap/resetpassword"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/color_activity_blue_bg"
+                android:textSize="12.5dp"></TextView>
+
+            <Button
+                android:id="@+id/sendMessage_btn"
+                android:layout_width="89.5dp"
+                android:layout_height="25.5dp"
+                android:layout_alignRight="@id/phoneText"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@mipmap/resetpasswordactive"
+                android:onClick="sendShorMessageClick"
+                android:text="发送验证码"
+                android:textSize="15dp"></Button>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2.5dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginLeft="34dp"
+        android:layout_marginRight="34dp"
+        android:background="#f2f3f4"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="34dp"
+        android:layout_marginRight="34dp"
+        android:text="为了安全,我们会向你的手机发送验证码"
+        android:textSize="11dp"
+        android:background="@null"
+        android:textColor="#9b9b9b"
+        />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:layout_marginLeft="34dp"
+            android:layout_marginRight="34dp"
+            android:orientation="horizontal"
+            android:gravity="bottom">
+
+            <EditText
+                android:id="@+id/message_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="7"
+                android:hint="请输入短信验证码"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:paddingBottom="1dp"
+                android:textColorHint="#c7c7c7"
+                android:textColor="#c7c7c7"
+                android:background="@null"
+                android:textSize="15dp"></EditText>
+
+            <ImageView
+                android:layout_weight="1"
+                android:layout_width="14.5dp"
+                android:layout_height="15.5dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="6dp"
+                android:background="@mipmap/register">
+            </ImageView>
+        </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2.5dp"
+        android:layout_marginLeft="34dp"
+        android:layout_marginRight="34dp"
+        android:layout_marginTop="14dp"
+        android:background="#f2f3f4"
+        />
+
+    <LinearLayout
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:layout_marginLeft="34dp"
+        android:layout_marginRight="34dp"
+        android:orientation="horizontal"
+        android:gravity="bottom">
+
+        <EditText android:id="@+id/firstpsd"
+            android:layout_weight="7"
+            android:inputType="textPassword"
+            android:hint="请输入6-16位字母数字"
+            android:textColorHint="#c7c7c7"
+            android:textSize="15dp"
+            android:textColor="#c7c7c7"
+            android:imeOptions="actionNext"
+            android:paddingBottom="1dp"
+            android:layout_width="fill_parent"
+            android:background="@null"
+            android:layout_height="wrap_content">
+        </EditText>
+        <ImageView
+            android:id="@+id/register_fpsd"
+            android:onClick="ShowPassword"
+            android:layout_weight="1"
+            android:layout_width="12.5dp"
+            android:layout_height="15.5dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:background="@mipmap/password"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2.5dp"
+        android:layout_marginLeft="34dp"
+        android:layout_marginRight="34dp"
+        android:layout_marginTop="14dp"
+        android:background="#f2f3f4"
+        />
+
+
+
+    <LinearLayout
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:layout_marginLeft="34dp"
+        android:layout_marginRight="34dp"
+        android:orientation="horizontal"
+        android:gravity="bottom">
+
+        <EditText android:id="@+id/secondpsd"
+            android:layout_weight="7"
+            android:inputType="textPassword"
+            android:hint="@string/againpsd"
+            android:textColorHint="#c7c7c7"
+            android:textSize="15dp"
+            android:textColor="#c7c7c7"
+            android:paddingBottom="1dp"
+            android:background="@null"
+            android:layout_width="fill_parent"
+            android:imeOptions="actionDone"
+            android:layout_height="wrap_content">
+        </EditText>
+        <ImageView
+            android:id="@+id/register_spsd"
+            android:onClick="ShowPassword"
+            android:layout_weight="1"
+            android:layout_width="12.5dp"
+            android:layout_height="15.5dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:background="@mipmap/password"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2.5dp"
+        android:layout_marginLeft="34dp"
+        android:layout_marginRight="34dp"
+        android:layout_marginTop="14dp"
+        android:background="#f2f3f4"
+        />
+    <LinearLayout
+        android:layout_width="314dp"
+        android:layout_height="38.5dp"
+        android:layout_marginTop="36dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal">
+        <Button
+            android:id="@+id/regster_btn"
+            android:onClick="regBtnClick"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="下一步"
+            android:background="@mipmap/resetpassword"
+            android:textSize="25dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginRight="34dp"
+        android:layout_marginTop="14dp"
+        android:gravity="center_vertical">
+
+        <RelativeLayout
+            android:onClick="IsClickProtocol"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:gravity="center_vertical">
+            <Button
+                android:id="@+id/clickRead"
+                android:onClick="IsClickProtocol"
+                android:layout_marginLeft="34dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:background="@mipmap/checkactive"/>
+        </RelativeLayout>
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="本人已阅读并同意"
+            android:textSize="11dp"
+            android:textColor="#5e5e5e"/>
+
+        <Button
+            android:id="@+id/regster_protocol"
+            android:onClick="ClickProtocol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="注册协议"
+            android:textSize="11dp"
+            android:textColor="#3c5fc5"
+            android:background="@null"/>
+
+    </LinearLayout>
+
+</LinearLayout>

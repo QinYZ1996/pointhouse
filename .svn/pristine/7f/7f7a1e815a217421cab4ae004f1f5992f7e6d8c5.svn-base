@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="104dp"
+    android:background="@color/white"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+
+    android:paddingEnd="@dimen/activity_group_item_padding"
+    android:paddingLeft="@dimen/activity_group_item_padding"
+    android:paddingRight="@dimen/activity_group_item_padding"
+    android:paddingStart="@dimen/activity_group_item_padding"
+   >
+
+    <!-- 定义一个用于显示头像的ImageView -->
+    <FrameLayout
+        android:id="@+id/frameGroup"
+        android:layout_width="65dp"
+        android:layout_height="104dp"
+        android:layout_centerVertical="true">
+
+        <ImageView
+            android:id="@+id/groupImg"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
+            android:adjustViewBounds="true"
+            android:layout_gravity="center_vertical|start"
+            android:baselineAlignBottom="true"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:id="@+id/txtMsgCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@drawable/red_point"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:minWidth="20dp"
+            android:textColor="@color/white"
+            android:textSize="12.0dp" />
+    </FrameLayout>
+
+    <RelativeLayout
+        android:paddingTop="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="22dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/frameGroup">
+
+        <TextView
+            android:id="@+id/groupName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="#2f2f2f"
+            android:textSize="17dp" />
+
+        <TextView
+            android:id="@+id/groupMember"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/groupName"
+            android:layout_marginTop="22dp"
+            android:includeFontPadding="false"
+            android:textColor="#828282"
+            android:textSize="12dp" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/viewLine"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="68dp"
+        android:background="#f5f5f5"></View>
+
+</RelativeLayout>

@@ -1,0 +1,333 @@
+package com.pointhouse.chiguan.s1;
+
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.pointhouse.chiguan.Application.GlobalApplication;
+import com.pointhouse.chiguan.R;
+import com.pointhouse.chiguan.common.base.HttpFragmentBase;
+import com.pointhouse.chiguan.common.http.RetrofitFactory;
+import com.pointhouse.chiguan.common.sdcard.SDCardHelper;
+import com.pointhouse.chiguan.common.util.DensityUtil;
+import com.pointhouse.chiguan.db.CourseDownloadInfo;
+import com.pointhouse.chiguan.db.CourseDownloadInfoDao;
+import com.pointhouse.chiguan.k1_2.DownloadService;
+import com.pointhouse.chiguan.k1_2.DownloadStateUtil;
+import com.pointhouse.chiguan.k1_3.Course;
+import com.pointhouse.chiguan.s1_1.WalkmanCourseActivity;
+import com.pointhouse.chiguan.s1_2.WalkmanLessonActivity;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.Call;
+
+import static com.netease.nimlib.sdk.msg.constant.SystemMessageStatus.init;
+import static com.pointhouse.chiguan.R.id.courseList;
+
+/**
+ * 随时学
+ * Created by ljj on 2017/6/30.
+ */
+
+public class WalkmanMainActivity extends HttpFragmentBase {
+    private static final String TAG = "WalkmanMainActivity";
+    private View viewMain, viewEmpty;
+    private ListView lvCourse;
+    private LinearLayout viewContainer;
+
+    private Map<Integer, Course> courseMap;
+    LayoutInflater inflater;
+    ViewGroup container;
+    Bundle savedInstanceState;
+    private CourseDownloadInfoDao courseDownloadInfoDao;
+
+    private static final int REQUEST_VIEW=1111;
+    Context mContext;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater,container,savedInstanceState);
+        this.inflater = inflater;
+        this.container = container;
+        this.savedInstanceState = savedInstanceState;
+        super.onCreate(savedInstanceState);
+        viewMain = inflater.inflate(R.layout.s1_activity_walkmanmain, container, false);
+        mContext=viewMain.getContext();
+        courseDownloadInfoDao = new CourseDownloadInfoDao(GlobalApplication.sContext);
+        init();
+        return viewMain;
+    }
+
+    @Override
+    public void getAsynHttpResponse(Call call, String json, int flg,int error) {
+
+    }
+
+    @Override
+    public void postAsynHttpResponse(Call call, String json, int flg) {
+
+    }
+
+    private void init() {
+        courseMap = WalkmanMediaUtil.initCourse(mContext, WalkmanMediaUtil.ALL);
+        List<Set<Integer>> list=new ArrayList<>();
+        list.add(courseMap.keySet());
+        RetrofitFactory.getInstance().getRequestServicesToken()
+                .get("lessonCount/"+ JSONObject.toJSON(list))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(jsonObject -> {
+                    if (!(jsonObject.getInteger("resultCode")==1)) {
+                        throw new Exception(jsonObject.toString());
+                    }
+                    JSONArray result=jsonObject.getJSONArray("resultObject");
+                    for(Object obj:result){
+                        JSONObject jo=(JSONObject)obj;
+                        Integer id=jo.getInteger("id");
+                        for(Integer cid:courseMap.keySet()){
+                            if(cid.equals(id)){
+                                courseMap.get(cid).setLessonNum(jo.getInteger("lessonNum"));
+                                break;
+                            }
+                        }
+                    }
+                    initView();
+                    initStyle();
+                    initListener();
+                },throwable -> {
+                    throwable.printStackTrace();
+                    initView();
+                    initStyle();
+                    initListener();
+                })
+                ;
+
+
+    }
+
+    private void initView() {
+        lvCourse = (ListView) viewMain.findViewById(R.id.lvCourse);
+        viewContainer = (LinearLayout) viewMain.findViewById(R.id.viewContainer);
+        viewEmpty = viewMain.findViewById(R.id.viewEmpty);
+    }
+
+    private void initStyle() {
+        Map<Integer, String> typeMap = new HashMap<>();
+        for (Map.Entry<Integer, Course> entry : courseMap.entrySet()) {
+            typeMap.put(entry.getValue().getCategoryId(), entry.getValue().getCategoryTitle());
+        }
+        if (typeMap.size() == 0) {
+            lvCourse.setEmptyView(viewEmpty);
+        }
+
+        for (Map.Entry<Integer, String> entry : typeMap.entrySet()) {
+            ListView lvList = new ListView(mContext);
+            if(entry.getKey()==null){
+                continue;
+            }
+            List<Course> courseList = new ArrayList<>();
+            for (Map.Entry<Integer, Course> entrySub : courseMap.entrySet()) {
+                if (entrySub==null||!entry.getKey().equals(entrySub.getValue().getCategoryId())) {
+                    continue;
+                }
+                courseList.add(entrySub.getValue());
+            }
+            List<WalkmanItem> itemList = new ArrayList<>();
+            itemList.clear();
+            int count = 0;
+            for (Course course : courseList) {
+                itemList.add(new WalkmanItem(course));
+                count++;
+                if (count >= 4) {
+                    break;
+                }
+            }
+            WalkmanItemAdapter adapter = new WalkmanItemAdapter(mContext, itemList);
+            View header = LayoutInflater.from(mContext).inflate(R.layout.s1_item_head, null, false);
+            TextView txtCourseType = (TextView) header.findViewById(R.id.txtCourseType);
+            txtCourseType.setText(entry.getValue());
+            lvList.addHeaderView(header);
+            View footer = LayoutInflater.from(mContext).inflate(R.layout.s1_item_foot, null, false);
+            View viewTypeAll = footer.findViewById(R.id.viewTypeAll);
+            if (courseList.size() <= 4) {
+                viewTypeAll.setVisibility(View.GONE);
+            } else {
+                viewTypeAll.setOnClickListener(v -> {
+                    Intent intent = new Intent(mContext, WalkmanCourseActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("courseMap", (LinkedHashMap<Integer, Course>) courseMap);
+                    bundle.putSerializable("typeName", entry.getValue());
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent,REQUEST_VIEW);
+                });
+            }
+            lvList.addFooterView(footer);
+            adapter.setClickListener((list1, position) -> {
+                try {
+                    Course course = courseMap.get(list1.get(position).getId());
+                    Intent intent = new Intent(mContext, WalkmanLessonActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("course", course);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent,REQUEST_VIEW);
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage());
+                }
+
+            });
+            adapter.setDeleteListener((list1, position) -> {
+                permissions(() -> {
+                    try {
+                        Integer courseId = (Integer) list1.get(position).getId();
+                        List<CourseDownloadInfo> courseDownloadInfoList = courseDownloadInfoDao.queryAllByCourseId(courseId);
+                        int downflg = DownloadStateUtil.getDownloadState(courseDownloadInfoList);
+                        switch (downflg) {
+                            case 1://下载中
+                            case 3://等待中
+                                mContext.bindService(new Intent(mContext, DownloadService.class),
+                                        new ServiceConnection() {
+                                            ServiceConnection that = this;
+
+                                            @Override
+                                            public void onServiceConnected(ComponentName name, IBinder service) {
+                                                DownloadService mDownloadService = ((DownloadService.MsgBinder) service).getService();
+                                                mDownloadService.stopDownload(courseDownloadInfoList);
+                                                mContext.unbindService(that);
+                                            }
+
+                                            @Override
+                                            public void onServiceDisconnected(ComponentName name) {
+
+                                            }
+                                        }
+                                        , Context.BIND_AUTO_CREATE);
+                                break;
+                        }
+                        Observable.timer(500, TimeUnit.MILLISECONDS)
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(aLong -> {
+                                    if (courseDownloadInfoList != null) {
+                                        for (CourseDownloadInfo courseDownloadInfo : courseDownloadInfoList) {
+                                            SDCardHelper.removeFileFromRom(courseDownloadInfo.getFilePath() + "/" + courseDownloadInfo.getfileName());
+                                            courseDownloadInfoDao.delete(courseDownloadInfo);
+                                        }
+                                        for (Course course : courseList) {
+                                            if(course.getId().equals(itemList.get(position).getId())){
+                                                courseList.remove(course);
+                                                break;
+                                            }
+                                        }
+                                        itemList.clear();
+                                        int count2 = 0;
+                                        for (Course course : courseList) {
+                                            itemList.add(new WalkmanItem(course));
+                                            count2++;
+                                            if (count2 >= 4) {
+                                                break;
+                                            }
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                        if(itemList.size()<4){
+                                            viewTypeAll.setVisibility(View.GONE);
+                                            lvList.getLayoutParams().height=DensityUtil.dip2px(mContext, 41) + DensityUtil.dip2px(mContext, 15) + itemList.size() * DensityUtil.dip2px(getContext(), 77);
+                                        }else{
+                                            lvList.getLayoutParams().height = DensityUtil.dip2px(mContext, 41) * 2 + DensityUtil.dip2px(mContext, 15) + itemList.size() * DensityUtil.dip2px(getContext(), 77);
+                                        }
+                                    }
+                                    courseMap.remove(courseId);
+                                }, throwable -> {
+                                    Log.e(TAG, throwable.getMessage());
+                                });
+                    } catch (SQLException e) {
+                        Toast.makeText(mContext, "删除失败", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
+                });
+            });
+            lvList.setAdapter(adapter);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+
+            if (itemList.size() < 4) {
+                lp.height = DensityUtil.dip2px(mContext, 41) + DensityUtil.dip2px(mContext, 15) + itemList.size() * DensityUtil.dip2px(mContext, 77);
+            } else {
+                lp.height = DensityUtil.dip2px(mContext, 41) * 2 + DensityUtil.dip2px(mContext, 15) + itemList.size() * DensityUtil.dip2px(mContext, 77);
+            }
+
+            viewContainer.addView(lvList, lp);
+        }
+
+    }
+
+    private void initListener() {
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        this.onCreateView(inflater,container,savedInstanceState);
+    }
+
+    private void permissions(CallBack callBack){
+        requestPermissions(PermissionGroup.STORAGE, true, new CallbackListener() {
+            @Override
+            public void onPermissionsOK(int requestCode, List<String> perms) {
+                callBack.accept();
+            }
+
+            @Override
+            public void onPermissionsNG(int requestCode, List<String> perms) {
+                Toast.makeText(mContext,"授权失败",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAppSettingsBack(int requestCode, int resultCode, Intent data) {
+                Toast.makeText(mContext,"授权取消",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case REQUEST_VIEW:
+                viewContainer.removeAllViews();
+                init();
+                break;
+        }
+    }
+
+    interface CallBack{
+        public void accept();
+    }
+}

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingLeft="@dimen/activity_group_item_padding"
+    android:paddingStart="@dimen/activity_group_item_padding"
+    android:paddingRight="@dimen/activity_group_item_padding"
+    android:paddingEnd="@dimen/activity_group_item_padding"
+    android:paddingTop="24dp"
+    android:paddingBottom="21dp"
+    android:layout_width="match_parent"
+    android:layout_height="103dp"
+    android:gravity="center_vertical"
+    android:background="@drawable/border_top"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/groupImg"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:src="@drawable/class_default"
+        android:baselineAlignBottom="true"
+        android:contentDescription="@string/group_my" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <TextView
+            android:id="@+id/groupName"
+            style="@style/paddingLeft8"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_2f2f2f"
+            android:textSize="17.0dp" />
+
+        <TextView
+            android:id="@+id/groupStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="@string/group_apply_add"
+            android:textColor="@color/color_3c5fc5"
+            android:textSize="12.0dp" />
+
+        <TextView
+            android:id="@+id/groupMember"
+            style="@style/paddingLeft8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:textColor="@color/color_828282"
+            android:textSize="12.0dp" />
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>
